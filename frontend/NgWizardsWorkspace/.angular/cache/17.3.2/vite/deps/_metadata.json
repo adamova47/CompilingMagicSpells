@@ -1,0 +1,73 @@
+{
+  "hash": "6490c9ad",
+  "configHash": "fadd6e9d",
+  "lockfileHash": "c1a6d5d5",
+  "browserHash": "782588b7",
+  "optimized": {
+    "@angular/common": {
+      "src": "../../../../../node_modules/@angular/common/fesm2022/common.mjs",
+      "file": "@angular_common.js",
+      "fileHash": "fdbcedcb",
+      "needsInterop": false
+    },
+    "@angular/common/http": {
+      "src": "../../../../../node_modules/@angular/common/fesm2022/http.mjs",
+      "file": "@angular_common_http.js",
+      "fileHash": "40a1b250",
+      "needsInterop": false
+    },
+    "@angular/core": {
+      "src": "../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "51a73d1a",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "478cb8fd",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "346472f0",
+      "needsInterop": false
+    },
+    "@angular/material/form-field": {
+      "src": "../../../../../node_modules/@angular/material/fesm2022/form-field.mjs",
+      "file": "@angular_material_form-field.js",
+      "fileHash": "4d7a5ee7",
+      "needsInterop": false
+    },
+    "@angular/forms": {
+      "src": "../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
+      "file": "@angular_forms.js",
+      "fileHash": "261de97b",
+      "needsInterop": false
+    },
+    "rxjs": {
+      "src": "../../../../../node_modules/rxjs/dist/esm5/index.js",
+      "file": "rxjs.js",
+      "fileHash": "78485e30",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-KADBSGEV": {
+      "file": "chunk-KADBSGEV.js"
+    },
+    "chunk-3B7ABZ7I": {
+      "file": "chunk-3B7ABZ7I.js"
+    },
+    "chunk-46BDKHFO": {
+      "file": "chunk-46BDKHFO.js"
+    },
+    "chunk-CY2AB2YM": {
+      "file": "chunk-CY2AB2YM.js"
+    },
+    "chunk-S3AEO27K": {
+      "file": "chunk-S3AEO27K.js"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-xl navbar-dark">
+  <div class="container-fluid">
+
+    <a class="navbar-brand mx-auto" routerLink="/cnc">
+      <img class="rounded-circle" src="assets/images/cnc-2.0-square.png" width="100"/>
+    </a>
+
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+
+      <div class="navbar-nav navbar-left">
+        <a *ngFor="let item of navbarHyperlinksNames" [routerLink]="item.getname === 'home' ? ['/cnc', ''] : ['/cnc', item.getname]" class="nav-item nav-link">
+          {{ item.name }}
+        </a>
+      </div>
+
+      <div class="navbar-nav navbar-right">
+        <a class="nav-item nav-link" href="http://cogsci.fmph.uniba.sk">Centre for Cognitive Science</a>
+        <a class="nav-item nav-link nav-logo-meicogsciba" href="http://cogsci.fmph.uniba.sk/meicogsciba/"><span class="hide-link-lg">MEi:Cogsci Bratislava</span></a>
+        <a class="nav-item nav-link nav-logo-round logo-fmfi" href="http://fmph.uniba.sk/"><span class="hide-link-lg">Faculty of mathematics, physics, and informatics</span></a>
+        <a class="nav-item nav-link nav-logo-round logo-uniba" href="http://uniba.sk/"><span class="hide-link-lg">Comenius University in Bratislava</span></a>
+      </div>
+      
+    </div>
+
+  </div>
+</nav>
+

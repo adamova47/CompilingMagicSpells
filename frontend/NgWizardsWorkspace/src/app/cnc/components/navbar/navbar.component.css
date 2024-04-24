@@ -1,0 +1,60 @@
+.navbar {
+    background-image: linear-gradient(#145170, #74c3ea);
+    box-shadow: 0 0 13px 10px #74c3ea;
+    margin-bottom: 0;
+}
+
+.navbar-nav a {
+    font-size: 17px;
+    color: white;
+    padding-left: 20px;
+}
+
+.navbar-nav a:hover {
+    text-decoration: underline;
+}
+
+.rounded-circle {
+    border: 2px solid #96cce6;
+    padding: 5px; /* gap between the image and the border */
+    outline: 2px solid #e2ecf1;
+    outline-offset: -5px; /* moves the outline inward to create the gap */
+}
+
+@media (min-width: 1200px) {
+    .hide-link-lg {
+        display: none;
+    }
+
+    .navbar-nav {
+        display: flex;
+        align-items: center; /* vertical alignment */
+        justify-content: center; /* horizontal alignment */
+        height: min-content; /* set a height or you wont see the effect */
+    }
+
+    .navbar-nav a {
+        padding-left: var(--bs-navbar-nav-link-padding-x);
+    }
+
+    .navbar .navbar-nav > a.nav-logo-meicogsciba {
+        background: url(../../../../assets/images/meicogsciba_transparent_blue.png) no-repeat;
+        background-size: 70px;
+        width: 80px;
+        height: 80px;
+    }
+
+    .navbar .navbar-nav > a.logo-fmfi {
+        background: url(../../../../assets/images/fmfi.png) no-repeat;
+        background-size: 80px;
+        width: 90px;
+        height: 90px;
+    }
+
+    .navbar .navbar-nav > a.logo-uniba {
+        background: url(../../../../assets/images/comenius.png) no-repeat;
+        background-size: 80px;
+        width: 90px;
+        height: 90px;
+    }
+}

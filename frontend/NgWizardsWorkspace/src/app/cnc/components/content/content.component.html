@@ -1,0 +1,15 @@
+<section>
+    <!-- publications component is shown when currentView is 'publications' -->
+    <app-publications *ngIf="currentView === 'publications'; else otherContent"></app-publications>
+
+    <!-- ng-template handles alternative views -->
+    <ng-template #otherContent>
+        <!-- projects component is shown when currentView is 'projects' -->
+        <app-projects *ngIf="currentView === 'research'; else defaultContent"></app-projects>
+        
+        <!-- default content to show when neither 'publications' nor 'projects' are the current view -->
+        <ng-template #defaultContent>
+            <app-somecontent [view]="currentView"></app-somecontent>
+        </ng-template>
+    </ng-template>
+</section>

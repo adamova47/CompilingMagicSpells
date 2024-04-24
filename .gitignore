@@ -1,0 +1,12 @@
+
+frontend/NgWizardsWorkspace/.vscode/
+
+frontend/NgWizardsWorkspace/node_modules/
+
+frontend/NgWizardsWorkspace/dist/
+
+backend/EndpointEnchantersWorkspace/.idea/
+
+backend/EndpointEnchantersWorkspace/db.sqlite3
+
+backend/EndpointEnchantersWorkspace/.venv/

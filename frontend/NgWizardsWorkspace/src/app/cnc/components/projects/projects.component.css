@@ -1,0 +1,16 @@
+.btn-link {
+    background: none;
+    border: none;
+    color: inherit; /* Inherit the font color */
+    padding: 5px;
+    cursor: pointer;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-link:focus {
+    outline: none; /* Remove focus outline */
+    box-shadow: none; /* Optional: remove box-shadow if it exists */
+}
+  
