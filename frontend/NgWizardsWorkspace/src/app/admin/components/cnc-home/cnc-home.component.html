@@ -1,0 +1,26 @@
+<mat-toolbar class="custom-toolbar">
+    <mat-toolbar-row>
+        <div>
+            <a mat-button *ngFor="let item of navbarHyperlinks" 
+            [routerLink]="item.getname === 'publications' ? ['/admin', item.getname] :
+            item.getname === 'home' ? ['/admin/cnchome', ''] :
+            ['/admin/cnchome', item.getname]">
+                {{ item.name }}
+            </a>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<section>
+    
+    <div ace-editor
+    [(text)]="text"
+    [mode]="'html'"
+    [theme]="'clouds'"
+    [options]="options"
+    [readOnly]="false"
+    [autoUpdateContent]="true"></div>
+
+    <button class="submit-button" mat-button (click)="updateContent()">Change Entry</button>
+
+</section>

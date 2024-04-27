@@ -1,25 +1,52 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
+import { AdminService } from '../../services/admin.service';
+import { Router } from '@angular/router';
+import { MatInputModule } from '@angular/material/input'
+import { MatCard, MatCardContent } from '@angular/material/card'
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, MatFormField, MatLabel],
+  imports: [ ReactiveFormsModule, MatInputModule, MatCardContent, MatCard, MatButtonModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  user = { username: '', password: '' };
+  form!: FormGroup;
+  errorMessage: string = '';
 
-  constructor(private http: HttpClient) {}
-
-  login() {
-      this.http.post('http://localhost:8000/login/', this.user)
-        .subscribe(
-            response => console.log('Login successful', response),
-            error => console.error('Login failed', error)
-        );
+  constructor(
+    private fb: FormBuilder,
+    private adminService: AdminService,
+    private router: Router
+  ) {
+    this.form = this.fb.group({
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]]
+    });
   }
+
+  onLogin(): void {
+    if (this.form.valid) {
+      const { username, password } = this.form.value;
+      this.adminService.login(username, password).subscribe({
+        next: (data) => {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('username', username);
+          this.router.navigate(['/admin'], { replaceUrl: true });
+        },
+        error: (error) => {
+          this.errorMessage = 'Invalid credentials';
+        }
+      });
+    } else {
+      this.errorMessage = 'Please fill in all fields.';
+    }
+  }
+
+  // helper method for access to the form controls directly from the template
+  get f() { return this.form.controls; }
 }

@@ -1,9 +1,13 @@
-from rest_framework import viewsets, status
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import HomeCnc, Publications, Projects
-from .serializers import CncNavbarSerializer, CncTextSerializer, CncProjectsSerializer
+from .models import HomeCnc, Publications, Projects, BibtexChars, HomeMeicogsci, Aiseminar
+from .serializers import (CncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer, LoginSerializer,
+                          AdminNavbarSerializer, BibtexCharSerializer, HomeMeicogsciNavbarSerializer,
+                          HomeMeicogsciTextSerializer, AiseminarSerializer)
 from .utils import format_publications, format_publication_for_bibtex
 
 
@@ -17,7 +21,7 @@ class CncNavbar(viewsets.ModelViewSet):
 
 class CncFooter(viewsets.ModelViewSet):
     queryset = HomeCnc.objects.filter(name='footer')
-    serializer_class = CncTextSerializer
+    serializer_class = HomeCncTextSerializer
 
 
 # APIView is a good choice when you need to implement custom behavior that doesn't necessarily fit into a standard
@@ -37,7 +41,7 @@ class CncGetHtmlContentByName(APIView):
             else:
                 # fetches the entry where 'getname' matches the provided 'name'
                 html_content = HomeCnc.objects.get(getname=name)  # returns a single instance, not a queryset
-                serializer = CncTextSerializer(html_content)
+                serializer = HomeCncTextSerializer(html_content)
 
             return Response(serializer.data)
         except Exception as e:
@@ -54,5 +58,141 @@ class CncExportBib(APIView):
             return Response({'bibtex': bibtex})
         except Publications.DoesNotExist:
             return Response({'error': 'Publication not found'}, status=404)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+
+class Login(APIView):
+    @staticmethod
+    def post(request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        username = serializer.validated_data['username']
+        password = serializer.validated_data['password']
+
+        user = authenticate(username=username, password=password)
+        if user:
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key, 'id': user.id, 'username': user.username})
+        return Response({'error': 'Invalid Credentials'}, status=403)
+
+
+class Logout(APIView):
+    @staticmethod
+    def post(request):
+        token = Token.objects.filter(user=request.user).first()
+        if token:
+            token.delete()
+            return Response({"success": "Logged out successfully"}, status=200)
+        return Response({"error": "Not logged in"}, status=403)
+
+
+class AdminCncHomeNavbar(viewsets.ModelViewSet):
+    queryset = HomeCnc.objects.order_by('id')
+    serializer_class = AdminNavbarSerializer
+
+
+class AdminCncHomeText(APIView):
+    @staticmethod
+    def get(request, getname):
+        try:
+            data = HomeCnc.objects.get(getname=getname)
+            serializer = HomeCncTextSerializer(data)
+            return Response({'data': serializer.data}, status=200)
+        except HomeCnc.DoesNotExist:
+            return Response({'error': 'CncHome table not found.'}, status=404)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+    @staticmethod
+    def post(request, getname):
+        try:
+            data = HomeCnc.objects.get(getname=getname)
+            serializer = HomeCncTextSerializer(data, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+            return Response(serializer.errors, status=400)
+        except HomeCnc.DoesNotExist:
+            return Response({'error': 'CncHome table not found.'}, status=404)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+class AdminCogSciHomeNavbar(viewsets.ModelViewSet):
+    queryset = HomeMeicogsci.objects.order_by('id')
+    serializer_class = HomeMeicogsciNavbarSerializer
+
+class AdminCogSciHomeText(APIView):
+    @staticmethod
+    def get(request, getname):
+        try:
+            data = HomeMeicogsci.objects.get(getname=getname)
+            serializer = HomeMeicogsciTextSerializer(data)
+            return Response({'data': serializer.data}, status=200)
+        except HomeCnc.DoesNotExist:
+            return Response({'error': 'CncHome table not found.'}, status=404)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+    @staticmethod
+    def post(request, getname):
+        try:
+            data = HomeMeicogsci.objects.get(getname=getname)
+            serializer = HomeMeicogsciTextSerializer(data, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+            return Response(serializer.errors, status=400)
+        except HomeCnc.DoesNotExist:
+            return Response({'error': 'CncHome table not found.'}, status=404)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+
+class AdminBibtexChars(APIView):
+    @staticmethod
+    def get(request):
+        try:
+            bibchars = BibtexChars.objects.all()
+            serializer = BibtexCharSerializer(bibchars, many=True)
+            return Response(serializer.data, status=200)
+        except BibtexChars.DoesNotExist:
+            return Response({'error': 'BibtexChars table not found.'}, status=404)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+    @staticmethod
+    def post(request):
+        serializer = BibtexCharSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+
+    @staticmethod
+    def put(request, bib_id):
+        bibchar = BibtexChars.objects.get(id=bib_id)
+        serializer = BibtexCharSerializer(bibchar, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+
+    def delete(self, request, bib_id):
+        bibchar = BibtexChars.objects.get(id=bib_id)
+        bibchar.delete()
+        return Response(status=200)
+
+
+class AdminAiSeminar(APIView):
+    @staticmethod
+    def get(request):
+        try:
+            seminars = Aiseminar.objects.all()
+            serializer = AiseminarSerializer(seminars, many=True)
+            return Response(serializer.data, status=200)
+        except Aiseminar.DoesNotExist:
+            return Response({'error': 'AiSeminar table not found.'}, status=404)
         except Exception as e:
             return Response({'error': str(e)}, status=500)

@@ -1,0 +1,17 @@
+header {
+    background-color: #021C1E;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+h1 {
+    color: white;
+    margin: 0;
+}
+
+.logout-button {
+    color: white !important;
+    background-color: #004445 !important;
+}

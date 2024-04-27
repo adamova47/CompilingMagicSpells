@@ -25,7 +25,7 @@ export class ExportbibtexComponent {
       this.cncService.getBibTex(pubId).subscribe({
         next: (data) => {
           this.bibtex = data.bibtex;
-          this.changeDetectorRef.detectChanges();  // triggers change detection (find out why its needed here - whats the problem)
+          this.changeDetectorRef.detectChanges();  // triggers change detection (find out why its needed here - what going on)
         },
         error: (error) => {
           console.error('Error fetching publication:', error);

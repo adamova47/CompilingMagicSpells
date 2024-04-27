@@ -1,0 +1,23 @@
+.loginForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    flex-direction: column;
+    background-color: #B9C4C9;
+}
+
+.login-button {
+    color: white !important;
+    background-color: #004445 !important;
+}
+
+mat-card-content {
+    min-width: 400px;
+    margin: 2em auto;
+    text-align: center;
+}
+
+mat-form-field {
+    display: block;
+}

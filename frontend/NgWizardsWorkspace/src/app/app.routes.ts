@@ -2,8 +2,8 @@ import { Routes } from '@angular/router';
 import { CncComponent } from './cnc/components/cnc/cnc.component';
 import { ExportbibtexComponent } from './cnc/components/exportbibtex/exportbibtex.component';
 import { LoginComponent } from './admin/components/login/login.component';
-import { AdminComponent } from './admin/components/admin/admin.component';
 import { authGuard } from './admin/services/auth.guard';
+import { AdminLayoutComponent } from './admin/components/admin-layout/admin-layout.component';
 
 export const routes: Routes = [
     { 
@@ -18,8 +18,19 @@ export const routes: Routes = [
     { path: 'admin/login', component: LoginComponent},
     { 
         path: 'admin', 
-        component: AdminComponent, 
+        component: AdminLayoutComponent, 
         canActivate: [authGuard], 
-        children: []
+        children: [
+            { 
+                path: ':section', 
+                component: AdminLayoutComponent, 
+                children: [
+                    {
+                        path: ':part', 
+                        component: AdminLayoutComponent
+                    }
+                ]
+            }
+        ]
     }
 ];

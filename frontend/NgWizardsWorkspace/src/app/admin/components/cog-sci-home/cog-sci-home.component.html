@@ -1,0 +1,27 @@
+<mat-toolbar class="custom-toolbar">
+    <mat-toolbar-row>
+        <div>
+            <ng-container *ngFor="let item of navbarHyperlinks">
+                <a mat-button *ngIf="item.getname !== 'gallery'"
+                    [routerLink]="item.getname === 'intro' ? ['/admin/cogscihome', ''] :
+                                  ['/admin/cogscihome', item.getname]">
+                    {{ item.name }}
+                </a>
+            </ng-container>            
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<section>
+    
+    <div ace-editor
+    [(text)]="text"
+    [mode]="'html'"
+    [theme]="'clouds'"
+    [options]="options"
+    [readOnly]="false"
+    [autoUpdateContent]="true"></div>
+
+    <button class="submit-button" mat-button (click)="updateContent()">Change Entry</button>
+
+</section>

@@ -1,0 +1,27 @@
+.custom-toolbar {
+    background-color: #2C7873;
+    color: white;
+}
+
+.mat-mdc-button:not(:disabled) {
+    color: white;
+}
+
+section {
+    margin: 1%;
+}
+
+[ace-editor] {
+    margin-bottom: 15px;
+    min-height: 650px; 
+    width: 100%; 
+    overflow: auto; 
+    border: 2px solid #ccc; 
+    border-radius: 10px;
+}
+
+.submit-button {
+    color: white !important;
+    background-color: #004445 !important;
+    font-weight: bold;
+}
