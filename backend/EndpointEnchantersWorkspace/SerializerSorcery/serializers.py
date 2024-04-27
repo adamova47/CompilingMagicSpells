@@ -28,7 +28,13 @@ class CncProjectsSerializer(serializers.ModelSerializer):
         return format_publications(publications)
 
 
-class AdminLoginSerializer(serializers.Serializer):
+class UsersSerializer(serializers.Serializer):
     class Meta:
         model = Users
-        fields = ['username', 'password']
+        fields = ['id', 'username', 'info', 'tablename', 'role', 'externalpublications']
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True, style={'input_type': 'password'})
+

@@ -1,12 +1,18 @@
-
+frontend/NgWizardsWorkspace/.angular-server
+frontend/NgWizardsWorkspace/.angular/cache
+frontend/NgWizardsWorkspace/.angular/build
+frontend/NgWizardsWorkspace/angular.json
+frontend/NgWizardsWorkspace/.angular/workspace
+frontend/NgWizardsWorkspace/coverage
 frontend/NgWizardsWorkspace/.vscode/
-
+frontend/NgWizardsWorkspace/tmp
 frontend/NgWizardsWorkspace/node_modules/
-
 frontend/NgWizardsWorkspace/dist/
+frontend/NgWizardsWorkspace/*.env
+frontend/NgWizardsWorkspace/*.env.local
 
 backend/EndpointEnchantersWorkspace/.idea/
-
 backend/EndpointEnchantersWorkspace/db.sqlite3
-
-backend/EndpointEnchantersWorkspace/.venv/
+backend/EndpointEnchantersWorkspace/__pycache__/
+backend/EndpointEnchantersWorkspace/*.py[cod]
+backend/EndpointEnchantersWorkspace/*$py.class

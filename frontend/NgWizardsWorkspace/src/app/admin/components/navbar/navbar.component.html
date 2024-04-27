@@ -1,1 +1,13 @@
-<p>navbar works!</p>
+<mat-toolbar class="custom-toolbar">
+    <mat-toolbar-row>
+        <div>
+            <a mat-button [routerLink]="['/admin']">My Home</a>
+            <a mat-button [routerLink]="['/admin/cnchome']">Cnc Home</a>
+            <a mat-button [routerLink]="['/admin/cncprojects']">Cnc Projects</a>
+            <a mat-button [routerLink]="['/admin/publications']">Publications</a>
+            <a mat-button [routerLink]="['/admin/bibtexchars']">BibTexChars</a>
+            <a mat-button [routerLink]="['/admin/cogscihome']">CogSci Home</a>
+            <a mat-button [routerLink]="['/admin/aiseminar']">AI Seminar</a>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>

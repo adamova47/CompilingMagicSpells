@@ -1,9 +1,11 @@
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import HomeCnc, Publications, Projects
-from .serializers import CncNavbarSerializer, CncTextSerializer, CncProjectsSerializer
+from .serializers import CncNavbarSerializer, CncTextSerializer, CncProjectsSerializer, LoginSerializer
 from .utils import format_publications, format_publication_for_bibtex
 
 
@@ -56,3 +58,29 @@ class CncExportBib(APIView):
             return Response({'error': 'Publication not found'}, status=404)
         except Exception as e:
             return Response({'error': str(e)}, status=500)
+
+
+class Login(APIView):
+    @staticmethod
+    def post(request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        username = serializer.validated_data['username']
+        password = serializer.validated_data['password']
+
+        user = authenticate(username=username, password=password)
+        if user:
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key, 'id': user.id, 'username': user.username})
+        return Response({'error': 'Invalid Credentials'}, status=403)
+
+
+class Logout(APIView):
+    @staticmethod
+    def post(request):
+        token = Token.objects.filter(user=request.user).first()
+        if token:
+            token.delete()
+            return Response({"success": "Logged out successfully"}, status=200)
+        return Response({"error": "Not logged in"}, status=403)

@@ -1,0 +1,9 @@
+.custom-toolbar {
+    background-color: #004445;
+    color: #ffffff;
+}
+
+
+.mat-mdc-button:not(:disabled) {
+    color: white;
+}
