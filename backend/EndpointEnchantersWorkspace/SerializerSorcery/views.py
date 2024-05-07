@@ -8,6 +8,13 @@ from .models import HomeCnc, Publications, Projects, BibtexChars, HomeMeicogsci,
 from .serializers import (CncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer, LoginSerializer,
                           AdminNavbarSerializer, BibtexCharSerializer, HomeMeicogsciNavbarSerializer,
                           HomeMeicogsciTextSerializer, AiseminarSerializer)
+
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import HomeCnc, Publications, Projects
+from .serializers import CncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer, LoginSerializer
 from .utils import format_publications, format_publication_for_bibtex
 
 
@@ -119,9 +126,11 @@ class AdminCncHomeText(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=500)
 
+
 class AdminCogSciHomeNavbar(viewsets.ModelViewSet):
     queryset = HomeMeicogsci.objects.order_by('id')
     serializer_class = HomeMeicogsciNavbarSerializer
+
 
 class AdminCogSciHomeText(APIView):
     @staticmethod

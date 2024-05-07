@@ -9,6 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 
 import { AdminService } from '../../services/admin.service';
 
+
 @Component({
   selector: 'app-ai-seminar',
   standalone: true,

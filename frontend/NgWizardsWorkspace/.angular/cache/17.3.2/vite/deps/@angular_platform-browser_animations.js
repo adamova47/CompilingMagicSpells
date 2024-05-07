@@ -1,9 +1,12 @@
 import {
+<<<<<<< HEAD
   BrowserModule,
   DomRendererFactory2
 } from "./chunk-W2Q3IMEU.js";
 import "./chunk-SN3WXICE.js";
 import {
+=======
+>>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
   AUTO_STYLE,
   AnimationGroupPlayer,
   AnimationMetadataType,
@@ -11,10 +14,22 @@ import {
   sequence,
   style,
   ɵPRE_STYLE
+<<<<<<< HEAD
 } from "./chunk-RHCIEBE7.js";
 import {
   DOCUMENT
 } from "./chunk-DGQXZQOO.js";
+=======
+} from "./chunk-DLHI753A.js";
+import {
+  BrowserModule,
+  DomRendererFactory2
+} from "./chunk-KADBSGEV.js";
+import "./chunk-3B7ABZ7I.js";
+import {
+  DOCUMENT
+} from "./chunk-46BDKHFO.js";
+>>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
 import {
   ANIMATION_MODULE_TYPE,
   ChangeDetectionScheduler,
@@ -31,6 +46,7 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
+<<<<<<< HEAD
 } from "./chunk-M3E7HNKO.js";
 import {
   __objRest,
@@ -38,6 +54,15 @@ import {
 } from "./chunk-JZJW2K2Z.js";
 
 // node_modules/@angular/animations/fesm2022/browser.mjs
+=======
+} from "./chunk-CY2AB2YM.js";
+import {
+  __objRest,
+  __spreadValues
+} from "./chunk-S3AEO27K.js";
+
+// ../../../../node_modules/@angular/animations/fesm2022/browser.mjs
+>>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
 var LINE_START = "\n - ";
 function invalidTimingValue(exp) {
   return new RuntimeError(3e3, ngDevMode && `The provided timing value "${exp}" is invalid.`);
@@ -3993,7 +4018,11 @@ var AnimationRendererFactory = class {
   }
 };
 
+<<<<<<< HEAD
 // node_modules/@angular/platform-browser/fesm2022/animations.mjs
+=======
+// ../../../../node_modules/@angular/platform-browser/fesm2022/animations.mjs
+>>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
 var _InjectableAnimationEngine = class _InjectableAnimationEngine extends AnimationEngine {
   // The `ApplicationRef` is injected here explicitly to force the dependency ordering.
   // Since the `ApplicationRef` should be created earlier before the `AnimationEngine`, they

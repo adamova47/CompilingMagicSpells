@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -6,10 +7,14 @@ import { AdminService } from '../../services/admin.service';
 import { CommonModule } from '@angular/common';
 import { AceEditorModule } from 'ngx-ace-editor-wrapper';
 import { Subscription, filter } from 'rxjs';
+=======
+import { Component } from '@angular/core';
+>>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
 
 @Component({
   selector: 'app-cnc-home',
   standalone: true,
+<<<<<<< HEAD
   imports: [MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule],
   templateUrl: './cnc-home.component.html',
   styleUrl: './cnc-home.component.css'
@@ -79,5 +84,12 @@ export class CncHomeComponent implements OnInit, OnDestroy{
       error: (error) => console.error('Error updating:', error)
     });
   }
+=======
+  imports: [],
+  templateUrl: './cnc-home.component.html',
+  styleUrl: './cnc-home.component.css'
+})
+export class CncHomeComponent {
+>>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
 
 }

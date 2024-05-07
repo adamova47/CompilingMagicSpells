@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (CncNavbar, CncFooter, CncGetHtmlContentByName, CncExportBib, Login, Logout, AdminCncHomeNavbar,
                     AdminCncHomeText, AdminBibtexChars, AdminCogSciHomeNavbar, AdminCogSciHomeText, AdminAiSeminar)
+from .views import CncNavbar, CncFooter, CncGetHtmlContentByName, CncExportBib, Login, Logout
 
 router = DefaultRouter()
 
@@ -28,4 +29,7 @@ urlpatterns = [
 
     path('admin/aiseminar/', AdminAiSeminar.as_view(), name='admin-aiseminar-list'),
     path('admin/aiseminar/<int:seminar_id>/', AdminAiSeminar.as_view(), name='admin-aiseminar-detail'),
+
+    path('admin/login/', Login.as_view(), name='admin-login'),
+    path('admin/logout/', Logout.as_view(), name='admin-logout'),
 ]

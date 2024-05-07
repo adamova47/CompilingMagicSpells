@@ -1,9 +1,16 @@
 import {
   MatCommonModule
+<<<<<<< HEAD
 } from "./chunk-NUKKTGRG.js";
 import {
   CommonModule
 } from "./chunk-DGQXZQOO.js";
+=======
+} from "./chunk-DZRZ43H6.js";
+import {
+  CommonModule
+} from "./chunk-46BDKHFO.js";
+>>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,10 +33,17 @@ import {
   ɵɵelementStart,
   ɵɵprojection,
   ɵɵprojectionDef
+<<<<<<< HEAD
 } from "./chunk-M3E7HNKO.js";
 import "./chunk-JZJW2K2Z.js";
 
 // node_modules/@angular/material/fesm2022/card.mjs
+=======
+} from "./chunk-CY2AB2YM.js";
+import "./chunk-S3AEO27K.js";
+
+// ../../../../node_modules/@angular/material/fesm2022/card.mjs
+>>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
 var _c0 = ["*"];
 var _c1 = [[["mat-card-title"], ["mat-card-subtitle"], ["", "mat-card-title", ""], ["", "mat-card-subtitle", ""], ["", "matCardTitle", ""], ["", "matCardSubtitle", ""]], [["", "mat-card-image", ""], ["", "matCardImage", ""], ["", "mat-card-sm-image", ""], ["", "matCardImageSmall", ""], ["", "mat-card-md-image", ""], ["", "matCardImageMedium", ""], ["", "mat-card-lg-image", ""], ["", "matCardImageLarge", ""], ["", "mat-card-xl-image", ""], ["", "matCardImageXLarge", ""]], "*"];
 var _c2 = ["mat-card-title, mat-card-subtitle,\n      [mat-card-title], [mat-card-subtitle],\n      [matCardTitle], [matCardSubtitle]", "[mat-card-image], [matCardImage],\n                    [mat-card-sm-image], [matCardImageSmall],\n                    [mat-card-md-image], [matCardImageMedium],\n                    [mat-card-lg-image], [matCardImageLarge],\n                    [mat-card-xl-image], [matCardImageXLarge]", "*"];
