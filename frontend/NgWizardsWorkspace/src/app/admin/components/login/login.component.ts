@@ -36,11 +36,7 @@ export class LoginComponent {
         next: (data) => {
           localStorage.setItem('token', data.token);
           localStorage.setItem('username', username);
-<<<<<<< HEAD
           this.router.navigate(['/admin'], { replaceUrl: true });
-=======
-          this.router.navigate(['/admin/']);
->>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
         },
         error: (error) => {
           this.errorMessage = 'Invalid credentials';
@@ -51,10 +47,6 @@ export class LoginComponent {
     }
   }
 
-<<<<<<< HEAD
   // helper method for access to the form controls directly from the template
-=======
-  // Helper method to access the form controls directly from the template
->>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
   get f() { return this.form.controls; }
 }

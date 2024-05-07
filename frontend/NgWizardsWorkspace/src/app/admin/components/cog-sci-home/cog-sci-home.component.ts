@@ -1,20 +1,17 @@
-<<<<<<< HEAD
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { AceEditorModule } from 'ngx-ace-editor-wrapper';
+
 import { AdminService } from '../../services/admin.service';
 import { Subscription, filter } from 'rxjs';
-=======
-import { Component } from '@angular/core';
->>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
 
 @Component({
   selector: 'app-cog-sci-home',
   standalone: true,
-<<<<<<< HEAD
   imports: [MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule],
   templateUrl: './cog-sci-home.component.html',
   styleUrl: './cog-sci-home.component.css'
@@ -85,12 +82,4 @@ export class CogSciHomeComponent implements OnInit, OnDestroy{
       error: (error) => console.error('Error updating:', error)
     });
   }
-=======
-  imports: [],
-  templateUrl: './cog-sci-home.component.html',
-  styleUrl: './cog-sci-home.component.css'
-})
-export class CogSciHomeComponent {
-
->>>>>>> b65a10d6c40067eecc3b2656e60d2f892547e78f
 }
