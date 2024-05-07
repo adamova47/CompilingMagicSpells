@@ -16,3 +16,4 @@ backend/EndpointEnchantersWorkspace/db.sqlite3
 backend/EndpointEnchantersWorkspace/__pycache__/
 backend/EndpointEnchantersWorkspace/*.py[cod]
 backend/EndpointEnchantersWorkspace/*$py.class
+backend/EndpointEnchantersWorkspace/SerializerSorcery/migrations

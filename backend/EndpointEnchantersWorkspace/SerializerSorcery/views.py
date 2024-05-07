@@ -1,8 +1,5 @@
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
-from rest_framework import viewsets
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from .models import HomeCnc, Publications, Projects, BibtexChars, HomeMeicogsci, Aiseminar
 from .serializers import (CncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer, LoginSerializer,
@@ -13,8 +10,6 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import HomeCnc, Publications, Projects
-from .serializers import CncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer, LoginSerializer
 from .utils import format_publications, format_publication_for_bibtex
 
 
@@ -188,7 +183,8 @@ class AdminBibtexChars(APIView):
             return Response(serializer.data, status=200)
         return Response(serializer.errors, status=400)
 
-    def delete(self, request, bib_id):
+    @staticmethod
+    def delete(request, bib_id):
         bibchar = BibtexChars.objects.get(id=bib_id)
         bibchar.delete()
         return Response(status=200)
@@ -205,3 +201,26 @@ class AdminAiSeminar(APIView):
             return Response({'error': 'AiSeminar table not found.'}, status=404)
         except Exception as e:
             return Response({'error': str(e)}, status=500)
+
+    @staticmethod
+    def post(request):
+        serializer = AiseminarSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+
+    @staticmethod
+    def put(request, aiseminar_id):
+        aiseminar = Aiseminar.objects.get(id=aiseminar_id)
+        serializer = AiseminarSerializer(aiseminar, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+
+    @staticmethod
+    def delete(request, aiseminar_id):
+        aiseminar = Aiseminar.objects.get(id=aiseminar_id)
+        aiseminar.delete()
+        return Response(status=200)

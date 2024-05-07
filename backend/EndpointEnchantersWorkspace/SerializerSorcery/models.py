@@ -11,7 +11,8 @@ from django.db import models
 
 class Aiseminar(models.Model):
     id = models.BigAutoField(primary_key=True)
-    datetime = models.DateField()
+    date = models.DateField()
+    time = models.TimeField(null=True, blank=True)
     lecturer = models.CharField(max_length=256)
     lecturerfrom = models.CharField(max_length=256)
     url = models.CharField(max_length=256)
@@ -20,7 +21,6 @@ class Aiseminar(models.Model):
     note = models.CharField(max_length=256)
 
     class Meta:
-        managed = False
         db_table = 'aiseminar'
 
 
