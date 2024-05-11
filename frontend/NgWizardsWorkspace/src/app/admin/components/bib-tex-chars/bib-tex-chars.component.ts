@@ -48,6 +48,7 @@ export class BibTexCharsComponent implements OnInit {
   }
 
   editEntry(char: any): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     this.currentChar = {...char};
     this.editing = true;
   }

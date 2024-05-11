@@ -158,7 +158,7 @@ class AdminBibtexChars(APIView):
     @staticmethod
     def get(request):
         try:
-            bibchars = BibtexChars.objects.all()
+            bibchars = BibtexChars.objects.all().order_by('-id')
             serializer = BibtexCharSerializer(bibchars, many=True)
             return Response(serializer.data, status=200)
         except BibtexChars.DoesNotExist:
@@ -194,7 +194,7 @@ class AdminAiSeminar(APIView):
     @staticmethod
     def get(request):
         try:
-            seminars = Aiseminar.objects.all()
+            seminars = Aiseminar.objects.all().order_by('-id')
             serializer = AiseminarSerializer(seminars, many=True)
             return Response(serializer.data, status=200)
         except Aiseminar.DoesNotExist:
@@ -211,8 +211,8 @@ class AdminAiSeminar(APIView):
         return Response(serializer.errors, status=400)
 
     @staticmethod
-    def put(request, aiseminar_id):
-        aiseminar = Aiseminar.objects.get(id=aiseminar_id)
+    def put(request, seminar_id):
+        aiseminar = Aiseminar.objects.get(id=seminar_id)
         serializer = AiseminarSerializer(aiseminar, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -220,7 +220,7 @@ class AdminAiSeminar(APIView):
         return Response(serializer.errors, status=400)
 
     @staticmethod
-    def delete(request, aiseminar_id):
-        aiseminar = Aiseminar.objects.get(id=aiseminar_id)
+    def delete(request, seminar_id):
+        aiseminar = Aiseminar.objects.get(id=seminar_id)
         aiseminar.delete()
         return Response(status=200)

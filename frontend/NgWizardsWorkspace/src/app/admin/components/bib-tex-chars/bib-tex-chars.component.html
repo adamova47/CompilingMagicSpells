@@ -1,47 +1,50 @@
 <div id="bibchars">
-    <mat-hint><strong>Hint</strong>: to process correctly, 3 backslashes are used instead of 1</mat-hint>
+    <mat-card class="mat-elevation-z4">
 
-    <div id="input-fields">
-        <mat-form-field appearance="fill">
-            <mat-label>Enter character</mat-label>
-            <input matInput [(ngModel)]="currentChar.char" name="char" placeholder="Character"/>
-        </mat-form-field>
-    
-        <mat-form-field appearance="fill">
-            <mat-label>Enter BibCode</mat-label>
-            <input matInput [(ngModel)]="currentChar.bibcode" name="bibcode" placeholder="BibCode"/>
-        </mat-form-field>
-    </div>
+        <mat-hint><strong>Hint</strong>: to process correctly, 3 backslashes are used instead of 1</mat-hint>
+        <div id="input-fields">
+            <mat-form-field appearance="fill">
+                <mat-label>Enter character</mat-label>
+                <input matInput [(ngModel)]="currentChar.char" name="char" placeholder="Character"/>
+            </mat-form-field>
+      
+            <mat-form-field appearance="fill">
+                <mat-label>Enter BibCode</mat-label>
+                <input matInput [(ngModel)]="currentChar.bibcode" name="bibcode" placeholder="BibCode"/>
+            </mat-form-field>
+        </div>
 
-    <div id="bibchar-buttons">
-        <button mat-raised-button *ngIf="editing" (click)="updateChar()">Edit</button>
-        <button mat-raised-button *ngIf="editing" (click)="clearForm()">Cancel</button>
-        <button mat-raised-button *ngIf="!editing" (click)="addChar()">Add</button>
-    </div>
+        <div id="bibchar-buttons">
+            <button mat-raised-button *ngIf="editing" (click)="updateChar()">Edit</button>
+            <button mat-raised-button *ngIf="editing" (click)="clearForm()">Cancel</button>
+            <button mat-raised-button *ngIf="!editing" (click)="addChar()">Add</button>
+        </div>
 
-    <br>
+    </mat-card>
 
-    <mat-table #table [dataSource]="chars">
+    <mat-table class="bibchar-table mat-elevation-z4" [dataSource]="chars">
+
         <ng-container matColumnDef="character">
             <mat-header-cell *matHeaderCellDef> Character </mat-header-cell>
             <mat-cell *matCellDef="let char"> {{char.char}} </mat-cell>
-          </ng-container>
-      
-          <ng-container matColumnDef="bibcode">
+        </ng-container>
+    
+        <ng-container matColumnDef="bibcode">
             <mat-header-cell *matHeaderCellDef> BibCode </mat-header-cell>
             <mat-cell *matCellDef="let char"> {{char.bibcode}} </mat-cell>
-          </ng-container>
-      
-          <ng-container matColumnDef="actions">
+        </ng-container>
+    
+        <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
             <mat-cell *matCellDef="let char" class="action-buttons">
-              <button mat-button (click)="editEntry(char)">Edit</button>
-              <button mat-button (click)="deleteEntry(char.id)">Delete</button>
+                <button mat-button (click)="editEntry(char)">Edit</button>
+                <button mat-button (click)="deleteEntry(char.id)">Delete</button>
             </mat-cell>
-          </ng-container>
-      
-          <mat-header-row *matHeaderRowDef="['character', 'bibcode', 'actions']"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: ['character', 'bibcode', 'actions'];"></mat-row>
+        </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="['character', 'bibcode', 'actions']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['character', 'bibcode', 'actions'];"></mat-row>
+
     </mat-table>
 
 </div>

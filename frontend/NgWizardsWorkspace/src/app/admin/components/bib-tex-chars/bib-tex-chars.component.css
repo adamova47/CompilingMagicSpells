@@ -1,5 +1,9 @@
 #bibchars {
-    margin: 35px;
+    padding: 25px;
+}
+
+mat-card {
+    padding: 2%;
 }
 
 mat-form-field {
@@ -26,4 +30,26 @@ button {
 .action-buttons {
     display: flex;
     gap: 8px;
+}
+
+mat-table {
+    margin-top: 20px;
+    padding: 2%;
+    width: 100%;
+}
+
+.mat-column-actions {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    flex: 0 0 10% !important;
+    width: 10% !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    word-break: break-word;
+
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
 }
