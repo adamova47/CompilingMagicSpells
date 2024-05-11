@@ -11,6 +11,8 @@ router.register(r'cnc/footer', CncFooter, basename='cnc-footer')
 
 router.register(r'admin/cnchome', AdminCncHomeNavbar, basename='admin-cnc-navbar')
 router.register(r'admin/cogscihome', AdminCogSciHomeNavbar, basename='admin-cogsci-navbar')
+router.register(r'admin/bibtexchars', AdminBibtexChars, basename='admin-bibtex-chars')
+router.register(r'admin/aiseminar', AdminAiSeminar, basename='admin-aiseminar')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -23,13 +25,4 @@ urlpatterns = [
 
     path('admin/cnchometext/<str:getname>/', AdminCncHomeText.as_view(), name='admin-cnc-home-text'),
     path('admin/cogscitext/<str:getname>/', AdminCogSciHomeText.as_view(), name='admin-cog-sci-text'),
-
-    path('admin/bibtexchars/', AdminBibtexChars.as_view(), name='admin-bibtex-chars-list'),
-    path('admin/bibtexchars/<int:bib_id>/', AdminBibtexChars.as_view(), name='admin-bibtex-chars-detail'),
-
-    path('admin/aiseminar/', AdminAiSeminar.as_view(), name='admin-aiseminar-list'),
-    path('admin/aiseminar/<int:seminar_id>/', AdminAiSeminar.as_view(), name='admin-aiseminar-detail'),
-
-    path('admin/login/', Login.as_view(), name='admin-login'),
-    path('admin/logout/', Logout.as_view(), name='admin-logout'),
 ]

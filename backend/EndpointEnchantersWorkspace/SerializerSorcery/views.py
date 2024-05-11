@@ -154,73 +154,11 @@ class AdminCogSciHomeText(APIView):
             return Response({'error': str(e)}, status=500)
 
 
-class AdminBibtexChars(APIView):
-    @staticmethod
-    def get(request):
-        try:
-            bibchars = BibtexChars.objects.all().order_by('-id')
-            serializer = BibtexCharSerializer(bibchars, many=True)
-            return Response(serializer.data, status=200)
-        except BibtexChars.DoesNotExist:
-            return Response({'error': 'BibtexChars table not found.'}, status=404)
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
-
-    @staticmethod
-    def post(request):
-        serializer = BibtexCharSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
-        return Response(serializer.errors, status=400)
-
-    @staticmethod
-    def put(request, bib_id):
-        bibchar = BibtexChars.objects.get(id=bib_id)
-        serializer = BibtexCharSerializer(bibchar, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
-        return Response(serializer.errors, status=400)
-
-    @staticmethod
-    def delete(request, bib_id):
-        bibchar = BibtexChars.objects.get(id=bib_id)
-        bibchar.delete()
-        return Response(status=200)
+class AdminBibtexChars(viewsets.ModelViewSet):
+    queryset = BibtexChars.objects.all().order_by('-id')
+    serializer_class = BibtexCharSerializer
 
 
-class AdminAiSeminar(APIView):
-    @staticmethod
-    def get(request):
-        try:
-            seminars = Aiseminar.objects.all().order_by('-id')
-            serializer = AiseminarSerializer(seminars, many=True)
-            return Response(serializer.data, status=200)
-        except Aiseminar.DoesNotExist:
-            return Response({'error': 'AiSeminar table not found.'}, status=404)
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
-
-    @staticmethod
-    def post(request):
-        serializer = AiseminarSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
-        return Response(serializer.errors, status=400)
-
-    @staticmethod
-    def put(request, seminar_id):
-        aiseminar = Aiseminar.objects.get(id=seminar_id)
-        serializer = AiseminarSerializer(aiseminar, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
-        return Response(serializer.errors, status=400)
-
-    @staticmethod
-    def delete(request, seminar_id):
-        aiseminar = Aiseminar.objects.get(id=seminar_id)
-        aiseminar.delete()
-        return Response(status=200)
+class AdminAiSeminar(viewsets.ModelViewSet):
+    queryset = Aiseminar.objects.all().order_by('-id')
+    serializer_class = AiseminarSerializer
