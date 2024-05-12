@@ -1,0 +1,84 @@
+<div id="projects">
+    <mat-card>
+        <h3>{{ editing ? 'Edit project ' + currentProject.id : 'New project' }}</h3>
+
+        <mat-form-field appearance="fill">
+            <mat-label> Tag name </mat-label>
+            <input matInput [(ngModel)]="currentProject.tag" name="tagname">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label> Title </mat-label>
+            <input matInput [(ngModel)]="currentProject.projectname" name="projectname">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label> Description </mat-label>
+            <input matInput [(ngModel)]="currentProject.description" name="description">
+        </mat-form-field>
+
+        <mat-checkbox [(ngModel)]="currentProject.vis" name="visibility"> Visibility </mat-checkbox>
+
+        <mat-form-field appearance="fill">
+            <mat-label> Add users: </mat-label>
+            <mat-select>
+                <mat-option>Whaaa</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <div id="projects-buttons">
+            <button mat-raised-button *ngIf="editing" (click)="updateProject()"> Edit </button>
+            <button mat-raised-button *ngIf="editing" (click)="clearForm()"> Cancel </button>
+            <button mat-raised-button *ngIf="!editing" (click)="addProject()"> Add </button>
+        </div>
+    </mat-card>
+
+    <mat-table class="projects-table mat-elevation-z4" [dataSource]="projects" matSort>
+
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
+            <mat-cell *matCellDef="let project"> {{project.id}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="vis">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Visibility </mat-header-cell>
+            <mat-cell *matCellDef="let project"> {{project.vis ? 'Yes' : 'No'}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="tag">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Tag </mat-header-cell>
+            <mat-cell *matCellDef="let project"> {{project.tag}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="projectname">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Project name </mat-header-cell>
+            <mat-cell *matCellDef="let project"> {{project.projectname}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+            <mat-cell *matCellDef="let project"> {{project.description}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="users">
+            <mat-header-cell *matHeaderCellDef> Users </mat-header-cell>
+            <mat-cell *matCellDef="let project">
+                <ng-container *ngFor="let user of project.users">
+                    {{ user.username }}
+                </ng-container>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let project" class="action-buttons">
+                <button mat-button (click)="editProject(project)"> Edit </button>
+                <button mat-button (click)="deleteProject(project.id)"> Delete </button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>
