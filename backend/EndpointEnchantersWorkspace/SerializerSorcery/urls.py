@@ -1,7 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import (CncNavbar, CncFooter, CncGetHtmlContentByName, CncExportBib, Login, Logout, AdminCncHomeNavbar,
-                    AdminCncHomeText, AdminBibtexChars, AdminCogSciHomeNavbar, AdminCogSciHomeText, AdminAiSeminar)
+
+from .views import (AdminCncHomeNavbar, AdminCncHomeText, AdminBibtexChars,
+                    AdminCogSciHomeNavbar, AdminCogSciHomeText, AdminAiSeminar,
+                    AdminCncProjects)
 from .views import CncNavbar, CncFooter, CncGetHtmlContentByName, CncExportBib, Login, Logout
 
 router = DefaultRouter()
@@ -13,6 +15,7 @@ router.register(r'admin/cnchome', AdminCncHomeNavbar, basename='admin-cnc-navbar
 router.register(r'admin/cogscihome', AdminCogSciHomeNavbar, basename='admin-cogsci-navbar')
 router.register(r'admin/bibtexchars', AdminBibtexChars, basename='admin-bibtex-chars')
 router.register(r'admin/aiseminar', AdminAiSeminar, basename='admin-aiseminar')
+router.register(r'admin/projects', AdminCncProjects, basename='admin-projects')
 
 urlpatterns = [
     path('', include(router.urls)),
