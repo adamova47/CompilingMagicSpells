@@ -1,19 +1,19 @@
 <div id="aiseminar">
     <mat-card class="mat-elevation-z4">
 
-        <h3>{{ editing ? 'Edit event ' + currentSeminar.id : 'New event' }}</h3>
+        <h3>{{ editing ? 'Edit seminar ' + currentSeminar.id : 'New seminar' }}</h3>
 
         <mat-form-field appearance="fill">
             <mat-label> Date </mat-label>
             <input matInput [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" 
-            [(ngModel)]="currentSeminar.date"
-            name="date">
+                [(ngModel)]="currentSeminar.date" name="date">
             <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
             <mat-label> Time </mat-label>
-            <input matInput [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2" [(ngModel)]="currentSeminar.time" name="time">
+            <input matInput [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2" 
+                [(ngModel)]="currentSeminar.time" name="time">
             <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time>
         </mat-form-field>
 
@@ -48,22 +48,22 @@
         </mat-form-field>
 
         <div id="aiseminar-buttons">
-            <button mat-raised-button *ngIf="editing" (click)="updateSeminar()">Edit</button>
-            <button mat-raised-button *ngIf="editing" (click)="clearForm()">Cancel</button>
-            <button mat-raised-button *ngIf="!editing" (click)="addSeminar()">Add</button>
+            <button mat-raised-button *ngIf="editing" (click)="updateSeminar()"> Edit </button>
+            <button mat-raised-button *ngIf="editing" (click)="clearForm()"> Cancel </button>
+            <button mat-raised-button *ngIf="!editing" (click)="addSeminar()"> Add </button>
         </div>
 
     </mat-card>
 
-    <mat-table class="bibchar-table mat-elevation-z4" [dataSource]="seminars">
+    <mat-table class="bibchar-table mat-elevation-z4" [dataSource]="seminars" matSort>
 
         <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef> Id </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
             <mat-cell *matCellDef="let seminar"> {{seminar.id}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="datetime">
-            <mat-header-cell *matHeaderCellDef> Date time </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Date time </mat-header-cell>
             <mat-cell *matCellDef="let seminar">
                 {{ seminar.date | date:'mediumDate' }} 
                 <ng-container *ngIf="seminar.time">
@@ -73,22 +73,22 @@
         </ng-container>
 
         <ng-container matColumnDef="lecturer">
-            <mat-header-cell *matHeaderCellDef> Lecturer </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Lecturer </mat-header-cell>
             <mat-cell *matCellDef="let seminar"> {{seminar.lecturer}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="lecturerfrom">
-            <mat-header-cell *matHeaderCellDef> Lecturer from </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Lecturer from </mat-header-cell>
             <mat-cell *matCellDef="let seminar"> {{seminar.lecturerfrom}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="url">
-            <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header> URL </mat-header-cell>
             <mat-cell *matCellDef="let seminar"> {{seminar.url}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="title">
-            <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Title </mat-header-cell>
             <mat-cell *matCellDef="let seminar"> {{seminar.title}} </mat-cell>
         </ng-container>
 
@@ -108,9 +108,9 @@
               <button mat-button (click)="editSeminar(seminar)"> Edit </button>
               <button mat-button (click)="deleteSeminar(seminar.id)"> Delete </button>
             </mat-cell>
-          </ng-container>
+        </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['id', 'datetime', 'lecturer', 'lecturerfrom', 'url', 'title', 'abstract', 'note', 'actions']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: ['id', 'datetime', 'lecturer', 'lecturerfrom', 'url', 'title', 'abstract', 'note', 'actions'];"></mat-row>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
 </div>

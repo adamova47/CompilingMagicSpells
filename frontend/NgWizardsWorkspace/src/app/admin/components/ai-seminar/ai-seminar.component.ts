@@ -1,29 +1,44 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 
 import { MatInputModule } from '@angular/material/input'
-import { MatCard, MatCardContent } from '@angular/material/card'
-import { FormsModule } from '@angular/forms';
+import { MatCard } from '@angular/material/card';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { OwlDateTimeModule, OwlNativeDateTimeModule, DateTimeAdapter } from '@danielmoncada/angular-datetime-picker';
 
 import { AdminService } from '../../services/admin.service';
 import { TruncatePipe } from '../../services/truncate.pipe';
 
+interface Seminar {
+  id: number | null;
+  date: string;
+  time: string;
+  lecturer: string;
+  lecturerfrom: string;
+  url: string;
+  title: string;
+  abstract: string;
+  note: string;
+}
 
 @Component({
   selector: 'app-ai-seminar',
   standalone: true,
-  imports: [OwlDateTimeModule, OwlNativeDateTimeModule, MatTableModule, MatInputModule, MatCardContent, MatCard, MatButtonModule, FormsModule, CommonModule, TruncatePipe],
+  imports: [OwlDateTimeModule, OwlNativeDateTimeModule, MatSortModule, MatTableModule, MatInputModule, MatCard, MatButtonModule, ReactiveFormsModule, FormsModule, CommonModule, TruncatePipe],
   templateUrl: './ai-seminar.component.html',
   styleUrl: './ai-seminar.component.css',
   providers: [DatePipe],
 })
-export class AiSeminarComponent {
-  seminars: any[] = [];
-  currentSeminar = { id: null, date: '', time: '', lecturer: '', lecturerfrom: '', url: '', title: '', abstract: '', note: '' };
+export class AiSeminarComponent implements OnInit{
+  displayedColumns: string[] = ['id', 'datetime', 'lecturer', 'lecturerfrom', 'url', 'title', 'abstract', 'note', 'actions'];
+  seminars: MatTableDataSource<Seminar> = new MatTableDataSource();
+  currentSeminar = this.getEmptySeminar();
   editing = false;
+  
+  @ViewChild(MatSort) sort: MatSort = new MatSort();
 
   constructor(private adminService: AdminService, dateTimeAdapter: DateTimeAdapter<any>, private datePipe: DatePipe) {
     dateTimeAdapter.setLocale('en-UK')
@@ -35,35 +50,46 @@ export class AiSeminarComponent {
 
   loadSeminars(): void {
     this.adminService.getAiseminarsList().subscribe(data => {
-      this.seminars = data;
+      this.seminars.data = data;
+      this.seminars.sort = this.sort;
+      this.seminars.sortingDataAccessor = (item: Seminar, property: string) => {
+        switch (property) {
+          case 'datetime':
+            return this.getCombinedDateTime(item.date, item.time);
+          case 'id':
+            return item.id ?? 0;
+          default:
+            return item[property as keyof Seminar] ?? "";
+        }
+      }
     }, error => console.log(error));
   }
 
+  private getCombinedDateTime(date: string, time: string): number {
+    const dateTimeString = time ? `${date}T${time}` : date;
+    return new Date(dateTimeString).getTime();
+  }
+
   addSeminar(): void {
-    this.formatDateForBackend();
-    this.formatTimeForBackend();
+    this.formatDateTimeForBackend();
     this.adminService.addAiseminar(this.currentSeminar).subscribe(() => {
       this.loadSeminars();
       this.clearForm();
     });
   }
 
-  formatDateForBackend(): void {
-    this.currentSeminar.date = this.datePipe.transform(this.currentSeminar.date, 'yyyy-MM-dd') || '';
-  }
-
-  formatTimeForBackend(): void {
-    this.currentSeminar.time = this.datePipe.transform(this.currentSeminar.time, 'HH:mm') || '';
-  } 
-
   updateSeminar(): void {
-    this.formatDateForBackend();
-    this.formatTimeForBackend();
+    this.formatDateTimeForBackend();
     this.adminService.updateAiseminar(this.currentSeminar.id!, this.currentSeminar).subscribe(() => {
       this.loadSeminars();
       this.clearForm();
     });
   }
+
+  formatDateTimeForBackend(): void {
+    this.currentSeminar.date = this.datePipe.transform(this.currentSeminar.date, 'yyyy-MM-dd') || '';
+    this.currentSeminar.time = this.datePipe.transform(this.currentSeminar.time, 'HH:mm') || '';
+  } 
 
   editSeminar(seminar: any): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -79,7 +105,7 @@ export class AiSeminarComponent {
   }
 
   clearForm(): void {
-    this.currentSeminar = { id: null, date: '', time: '', lecturer: '', lecturerfrom: '', url: '', title: '', abstract: '', note: '' };
+    this.currentSeminar = this.getEmptySeminar();
     this.editing = false;
   }
 
@@ -87,5 +113,9 @@ export class AiSeminarComponent {
     this.adminService.deleteAiseminar(id).subscribe(() => {
       this.loadSeminars();
     });
+  }
+
+  private getEmptySeminar(): Seminar {
+    return { id: null, date: '', time: '', lecturer: '', lecturerfrom: '', url: '', title: '', abstract: '', note: '' };
   }
 }
