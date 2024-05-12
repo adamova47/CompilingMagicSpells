@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HomeCnc, Projects, Users, BibtexChars, HomeMeicogsci, Aiseminar
+from .models import HomeCnc, Projects, Users, BibtexChars, HomeMeicogsci, Aiseminar, Userxproject
 from .utils import format_publications
 
 
@@ -15,13 +15,20 @@ class AiseminarSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CncNavbarSerializer(serializers.ModelSerializer):
+class ProjectsSerializer(serializers.ModelSerializer):
+    users = serializers.SerializerMethodField()
+
     class Meta:
-        model = HomeCnc
-        fields = ['name', 'getname']
+        model = Projects
+        fields = ['id', 'tag', 'projectname', 'description', 'vis', 'users']
+
+    @staticmethod
+    def get_users(obj):
+        users = obj.users.all()
+        return [{'id': user.id, 'username': user.username} for user in users]
 
 
-class AdminNavbarSerializer(serializers.ModelSerializer):
+class HomeCncNavbarSerializer(serializers.ModelSerializer):
     class Meta:
         model = HomeCnc
         fields = ['name', 'getname']
@@ -56,12 +63,6 @@ class CncProjectsSerializer(serializers.ModelSerializer):
     def get_formatted_publications(obj):
         publications = obj.publications.filter(vis=True).order_by('-year').values()
         return format_publications(publications)
-
-
-class UsersSerializer(serializers.Serializer):
-    class Meta:
-        model = Users
-        fields = ['id', 'username', 'info', 'tablename', 'role', 'externalpublications']
 
 
 class LoginSerializer(serializers.Serializer):
