@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { MatInputModule } from '@angular/material/input'
 import { MatCard, MatCardContent } from '@angular/material/card'
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 
@@ -12,7 +12,8 @@ import { AdminService } from '../../services/admin.service';
 @Component({
   selector: 'app-bib-tex-chars',
   standalone: true,
-  imports: [MatTableModule, MatInputModule, MatCardContent, MatCard, MatButtonModule, FormsModule, CommonModule],
+  imports: [MatTableModule, MatInputModule, MatCardContent, MatCard, MatButtonModule, 
+    ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './bib-tex-chars.component.html',
   styleUrl: './bib-tex-chars.component.css'
 })
