@@ -25,7 +25,7 @@ export class AdminService {
         this.router.navigate(['/admin/login']);
       },
       error: (error) => {
-        console.error('Logout failed', error);
+        console.error('Logout failed.', error);
       }
     });
   }
@@ -84,6 +84,11 @@ export class AdminService {
 
   deleteAiseminar(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}aiseminar/${id}/`);
+  }
+
+  // cnc projects
+  getProjectsList(): Observable<any> {
+    return this.http.get(`${this.apiUrl}projects/`);
   }
 
 }
