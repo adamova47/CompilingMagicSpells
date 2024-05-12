@@ -2,9 +2,9 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 
 from .models import HomeCnc, Publications, Projects, BibtexChars, HomeMeicogsci, Aiseminar
-from .serializers import (CncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer, LoginSerializer,
-                          AdminNavbarSerializer, BibtexCharSerializer, HomeMeicogsciNavbarSerializer,
-                          HomeMeicogsciTextSerializer, AiseminarSerializer)
+from .serializers import (HomeCncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer,
+                          LoginSerializer, BibtexCharSerializer, HomeMeicogsciNavbarSerializer,
+                          HomeMeicogsciTextSerializer, AiseminarSerializer, ProjectsSerializer)
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -18,7 +18,7 @@ from .utils import format_publications, format_publication_for_bibtex
 # of a model and don't need to heavily customize the behavior of those operations.
 class CncNavbar(viewsets.ModelViewSet):
     queryset = HomeCnc.objects.filter(primarytext=1).order_by('id')
-    serializer_class = CncNavbarSerializer
+    serializer_class = HomeCncNavbarSerializer
 
 
 class CncFooter(viewsets.ModelViewSet):
@@ -92,7 +92,7 @@ class Logout(APIView):
 
 class AdminCncHomeNavbar(viewsets.ModelViewSet):
     queryset = HomeCnc.objects.order_by('id')
-    serializer_class = AdminNavbarSerializer
+    serializer_class = HomeCncNavbarSerializer
 
 
 class AdminCncHomeText(APIView):
@@ -162,3 +162,8 @@ class AdminBibtexChars(viewsets.ModelViewSet):
 class AdminAiSeminar(viewsets.ModelViewSet):
     queryset = Aiseminar.objects.all().order_by('-id')
     serializer_class = AiseminarSerializer
+
+
+class AdminCncProjects(viewsets.ModelViewSet):
+    queryset = Projects.objects.all().order_by('-id')
+    serializer_class = ProjectsSerializer
