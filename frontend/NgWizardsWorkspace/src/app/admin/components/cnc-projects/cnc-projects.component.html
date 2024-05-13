@@ -2,6 +2,17 @@
     <mat-card>
         <h3>{{ editing ? 'Edit project ' + currentProject.id : 'New project' }}</h3>
 
+        <mat-checkbox [(ngModel)]="currentProject.vis" name="visibility"> Visibility </mat-checkbox>
+
+        <mat-form-field appearance="fill">
+            <mat-label> Add users </mat-label>
+            <mat-select multiple [(ngModel)]="currentProject.users" [compareWith]="compareWithFn">
+                <mat-option *ngFor="let user of users" [value]="user.id">
+                    {{ user.first_name }} {{ user.last_name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <mat-form-field appearance="fill">
             <mat-label> Tag name </mat-label>
             <input matInput [(ngModel)]="currentProject.tag" name="tagname">
@@ -14,18 +25,8 @@
 
         <mat-form-field appearance="fill">
             <mat-label> Description </mat-label>
-            <input matInput [(ngModel)]="currentProject.description" name="description">
+            <textarea matInput [(ngModel)]="currentProject.description" name="description" rows="3"></textarea>
         </mat-form-field>
-
-        <mat-checkbox [(ngModel)]="currentProject.vis" name="visibility"> Visibility </mat-checkbox>
-
-        <mat-form-field appearance="fill">
-            <mat-label> Add users: </mat-label>
-            <mat-select>
-                <mat-option>Whaaa</mat-option>
-            </mat-select>
-        </mat-form-field>
-
 
         <div id="projects-buttons">
             <button mat-raised-button *ngIf="editing" (click)="updateProject()"> Edit </button>
@@ -64,9 +65,7 @@
         <ng-container matColumnDef="users">
             <mat-header-cell *matHeaderCellDef> Users </mat-header-cell>
             <mat-cell *matCellDef="let project">
-                <ng-container *ngFor="let user of project.users">
-                    {{ user.username }}
-                </ng-container>
+                {{ formatUserNames(project.users) }}
             </mat-cell>
         </ng-container>
 

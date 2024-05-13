@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatInputModule } from '@angular/material/input';
@@ -8,7 +8,7 @@ import { MatCard } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 import { TruncatePipe } from '../../services/truncate.pipe';
 import { AdminService } from '../../services/admin.service';
@@ -19,7 +19,7 @@ interface Project {
   projectname: string;
   description: string;
   vis: boolean;
-  users: { id: number, username: string }[];
+  users: { id: number, first_name: string, last_name: string }[] | number[];
 }
 
 @Component({
@@ -32,29 +32,41 @@ interface Project {
 })
 export class CncProjectsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'vis', 'tag', 'projectname', 'description', 'users', 'actions'];
+
   projects: MatTableDataSource<Project> = new MatTableDataSource();
   currentProject = this.getEmptyProject();
   editing = false;
+
+  users: any[] = [];
+
+  @ViewChild(MatSort) sort: MatSort = new MatSort();
 
   constructor (private adminService: AdminService) {}
 
   ngOnInit(): void {
     this.loadProjects();
+    this.adminService.getUsers().subscribe(data => {
+      this.users = data;
+    });
   }
 
   loadProjects(): void {
     this.adminService.getProjectsList().subscribe((data: Project[]) => {
       this.projects.data = data;
+      this.projects.sort = this.sort;
     });
   }
 
   updateProject(): void {
-
+    this.adminService.updateProject(this.currentProject.id!, this.currentProject).subscribe(() => {
+      this.loadProjects();
+      this.clearForm();
+    });
   }
 
   editProject(project: any): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.currentProject = { ...project };
+    this.currentProject = { ...project, users: project.users.map((user: any) => user.id) };
     this.editing = true;
   }
 
@@ -64,14 +76,27 @@ export class CncProjectsComponent implements OnInit {
   }
 
   addProject(): void {
-
+    this.adminService.addProject(this.currentProject).subscribe(() => {
+      this.loadProjects();
+      this.clearForm();
+    });
   }
 
   deleteProject(id: number): void {
-
+    this.adminService.deleteProject(id).subscribe(() => {
+      this.loadProjects();
+    });
   }
 
   private getEmptyProject(): Project {
     return { id: null, tag: '', projectname: '', description: '', vis: false, users: []};
+  }
+
+  formatUserNames(users: any[]): string {
+    return users.map(user => `${user.first_name} ${user.last_name}`).join(', ');
+  }
+
+  compareWithFn(userId1: number, userId2: number): boolean {
+    return userId2 ? userId1 === userId2 : false;
   }
 }

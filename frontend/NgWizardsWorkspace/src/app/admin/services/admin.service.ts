@@ -12,14 +12,14 @@ export class AdminService {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(username: string, password: string) {
-    return this.http.post<any>(`${this.apiUrl}login/`, {username, password});
+    return this.http.post<any>(`${this.apiUrl}wslogin/`, {username, password});
   }
 
   logout() {
     const headers = new HttpHeaders({
       'Authorization': `Token ${localStorage.getItem('token')}`
     });
-    this.http.post<any>(`${this.apiUrl}logout/`, {}, { headers }).subscribe({
+    this.http.post<any>(`${this.apiUrl}wslogout/`, {}, { headers }).subscribe({
       next: (response) => {
         localStorage.removeItem('token');
         this.router.navigate(['/admin/login']);
@@ -89,6 +89,22 @@ export class AdminService {
   // cnc projects
   getProjectsList(): Observable<any> {
     return this.http.get(`${this.apiUrl}projects/`);
+  }
+
+  addProject(project: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}projects/`, project);
+  }
+
+  updateProject(id: number, project: any): Observable<Object> {
+    return this.http.put(`${this.apiUrl}projects/${id}/`, project);
+  }
+
+  deleteProject(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}projects/${id}/`);
+  }
+
+  getUsers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}users/`)
   }
 
 }
