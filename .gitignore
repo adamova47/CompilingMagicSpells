@@ -19,3 +19,5 @@ backend/EndpointEnchantersWorkspace/*$py.class
 backend/EndpointEnchantersWorkspace/SerializerSorcery/migrations
 
 backend/EndpointEnchantersWorkspace/SerializerSorcery/__pycache__/
+
+backend/EndpointEnchantersWorkspace/EndpointEnchantersWorkspace/__pycache__/
