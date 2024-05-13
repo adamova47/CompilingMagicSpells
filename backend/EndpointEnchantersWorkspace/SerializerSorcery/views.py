@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate
+from rest_framework.authtoken.admin import User
 from rest_framework.authtoken.models import Token
 
 from .models import HomeCnc, Publications, Projects, BibtexChars, HomeMeicogsci, Aiseminar
 from .serializers import (HomeCncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer,
                           LoginSerializer, BibtexCharSerializer, HomeMeicogsciNavbarSerializer,
-                          HomeMeicogsciTextSerializer, AiseminarSerializer, ProjectsSerializer)
+                          HomeMeicogsciTextSerializer, AiseminarSerializer, ProjectsSerializer, UserSerializer)
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -167,3 +168,8 @@ class AdminAiSeminar(viewsets.ModelViewSet):
 class AdminCncProjects(viewsets.ModelViewSet):
     queryset = Projects.objects.all().order_by('-id')
     serializer_class = ProjectsSerializer
+
+
+class AdminUserList(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by('-id')
+    serializer_class = UserSerializer
