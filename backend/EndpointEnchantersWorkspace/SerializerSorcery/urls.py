@@ -4,8 +4,8 @@ from rest_framework.routers import DefaultRouter
 from .views import (AdminCncHomeNavbar, AdminCncHomeText, AdminBibtexChars,
                     AdminCogSciHomeNavbar, AdminCogSciHomeText, AdminAiSeminar,
                     AdminCncProjects, AdminUserList, AdminMyHomeData, AdminMyHomeNavbar, AdminGetInsertData,
-                    AdminProjectsList)
-from .views import CncNavbar, CncFooter, CncGetHtmlContentByName, CncExportBib, Login, Logout
+                    AdminProjectsList, AdminPublications, AdminProcessBibtexs, AdminGetBibtex, AdminExportBibtexs)
+from .views import CncNavbar, CncFooter, CncGetHtmlContentByName, CncGetBibtex, Login, Logout
 
 router = DefaultRouter()
 
@@ -21,12 +21,13 @@ router.register(r'admin/aiseminar', AdminAiSeminar, basename='admin-aiseminar')
 router.register(r'admin/projects', AdminCncProjects, basename='admin-projects')
 router.register(r'admin/userslist', AdminUserList, basename='admin-userslist')
 router.register(r'admin/projectslist', AdminProjectsList, basename='admin-projectslist')
+router.register(r'admin/publications', AdminPublications, basename='admin-publications')
 
 urlpatterns = [
     path('', include(router.urls)),
 
     path('cnc/<str:name>/', CncGetHtmlContentByName.as_view(), name='cnc-get-text-by-name'),
-    path('cnc/exportBib/<int:pub_id>/', CncExportBib.as_view(), name='cnc-export_bib'),
+    path('cnc/getBib/<int:pub_id>/', CncGetBibtex.as_view(), name='cnc-export_bib'),
 
     path('admin/wslogin/', Login.as_view(), name='admin-login'),
     path('admin/wslogout/', Logout.as_view(), name='admin-logout'),
@@ -36,4 +37,9 @@ urlpatterns = [
 
     path('admin/insertdata/', AdminGetInsertData.as_view(), name='admin-insertdata'),
     path('admin/insertdata/<str:username>', AdminGetInsertData.as_view(), name='admin-insertdata-user'),
+
+    path('admin/bibtexs/', AdminProcessBibtexs.as_view(), name='admin-bibtexs'),
+    path('admin/getBib/<int:pub_id>/', AdminGetBibtex.as_view(), name='admin-export-bib'),
+
+    path('admin/exportBibtex/', AdminExportBibtexs.as_view(), name='export-bibtex'),
 ]

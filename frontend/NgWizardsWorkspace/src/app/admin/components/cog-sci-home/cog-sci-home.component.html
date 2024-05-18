@@ -4,7 +4,7 @@
             <ng-container *ngFor="let item of navbarHyperlinks">
                 <a mat-button *ngIf="item.getname !== 'gallery'"
                     [routerLink]="item.getname === 'intro' ? ['/admin/cogscihome', ''] :
-                                  ['/admin/cogscihome', item.getname]">
+                                    ['/admin/cogscihome', item.getname]">
                     {{ item.name }}
                 </a>
             </ng-container>            
@@ -13,19 +13,19 @@
 </mat-toolbar>
 
 <section>
-    
-    <ace-editor #aceEditor
-    [(text)]="text"
-    [mode]="'html'"
-    [theme]="'clouds'"
-    [options]="options"
-    [readOnly]="false"
-    [autoUpdateContent]="true"></ace-editor>
+    <mat-card>
+        <ace-editor #aceEditor
+        [(text)]="text"
+        [mode]="'html'"
+        [theme]="'clouds'"
+        [options]="options"
+        [readOnly]="false"
+        [autoUpdateContent]="true"></ace-editor>
 
-    <app-insert-data [target]="aceEditor"></app-insert-data>
+        <app-insert-data [target]="aceEditor"></app-insert-data>
 
-    <div>
-        <button class="submit-button" mat-button (click)="updateContent()">Change Entry</button>
-    </div>
-
+        <div>
+            <button class="submit-button" mat-button (click)="updateContent()">Change Entry</button>
+        </div>
+    </mat-card>
 </section>

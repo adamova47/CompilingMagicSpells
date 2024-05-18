@@ -28,7 +28,7 @@
             <textarea #descriptionTextArea matInput [(ngModel)]="currentProject.description" name="description" rows="5"></textarea>
         </mat-form-field>
 
-        <app-insert-data [target]="descriptionTextArea"></app-insert-data>
+        <app-insert-data [target]="descriptionTextArea" (textInserted)="handleTextInsert($event)"></app-insert-data>
 
         <div id="projects-buttons">
             <button mat-raised-button *ngIf="editing" (click)="updateProject()"> Edit </button>
@@ -75,7 +75,7 @@
             <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
             <mat-cell *matCellDef="let project" class="action-buttons">
                 <button mat-button (click)="editProject(project)"> Edit </button>
-                <button mat-button (click)="updateVis(project)"> {{ project.vis ? 'Disable' : 'Enable' }} </button>
+                <button mat-button (click)="toggleVisibility(project)"> {{ project.vis ? 'Disable' : 'Enable' }} </button>
                 <button mat-button (click)="deleteProject(project.id)"> Delete </button>
             </mat-cell>
         </ng-container>

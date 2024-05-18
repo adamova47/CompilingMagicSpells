@@ -1,0 +1,18 @@
+<div class="export-bibtex">
+    <mat-form-field appearance="fill">
+        <mat-label>Users</mat-label>
+        <mat-select multiple [(value)]="selectedUsers">
+            <mat-option *ngFor="let user of allUsers" [value]="user.id">{{ user.first_name }} {{ user.last_name }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill">
+        <mat-label>Projects</mat-label>
+        <mat-select multiple [(value)]="selectedProjects">
+            <mat-option *ngFor="let project of allProjects" [value]="project.id">{{ project.tag }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
+<button mat-raised-button (click)="exportBibtex()">Export BibTeX</button>
+  

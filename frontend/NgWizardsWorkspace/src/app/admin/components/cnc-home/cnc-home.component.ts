@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 import { AdminService } from '../../services/admin.service';
 import { AceEditorModule } from 'ngx-ace-editor-wrapper';
 
@@ -14,7 +15,7 @@ import { InsertDataComponent } from '../insert-data/insert-data.component';
 @Component({
   selector: 'app-cnc-home',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
+  imports: [MatCardModule, MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
   templateUrl: './cnc-home.component.html',
   styleUrl: './cnc-home.component.css'
 })

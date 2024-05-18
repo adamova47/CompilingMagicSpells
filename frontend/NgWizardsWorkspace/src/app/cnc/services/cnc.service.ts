@@ -23,6 +23,6 @@ export class CncService {
   }
 
   getBibTex(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}exportBib/${id}/`);
+    return this.http.get(`${this.apiUrl}getBib/${id}/`);
   }
 }

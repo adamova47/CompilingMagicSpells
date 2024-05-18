@@ -36,7 +36,7 @@ export class LoginComponent {
         next: (data) => {
           localStorage.setItem('token', data.token);
           localStorage.setItem('username', username);
-          this.router.navigate(['/admin'], { replaceUrl: true });
+          this.router.navigate(['/admin/myhome'], { replaceUrl: true });
         },
         error: (error) => {
           this.errorMessage = 'Invalid credentials';

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -126,7 +126,38 @@ export class AdminService {
   }
 
   // publications
+  getPublicationsList(sort: string = ''): Observable<any> {
+    let params = new HttpParams();
+    if (sort) {
+      params = params.append('ordering', sort);
+    }
+    return this.http.get(`${this.apiUrl}publications/`, { params });
+  }
 
+  addPublication(publication: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}publications/`, publication);
+  }
+
+  updatePublication(id: number, publication: any): Observable<Object> {
+    return this.http.put(`${this.apiUrl}publications/${id}/`, publication);
+  }
+
+  deletePublication(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}publications/${id}/`);
+  }
+
+  sendBibtexData(bibtexContent: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}bibtexs/`, { bibtexContent });
+  }
+
+  getBibTex(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}getBib/${id}/`);
+  }
+
+  exportBibtex(userIds: any[], projectIds: any[]): Observable<any> {
+    const body = { userIds, projectIds };
+    return this.http.post(`${this.apiUrl}exportBibtex/`, body, { responseType: 'blob' });
+  }
 
   // general 
   getUsers(): Observable<any> {

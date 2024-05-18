@@ -1,4 +1,7 @@
 # essentially returns a list of HTML-ready strings, each representing a publication in formatted manner
+from SerializerSorcery.models import BibtexChars
+
+
 def format_publications(data):
     # list containing all the formatted publication entries
     formatted_data = []
@@ -130,9 +133,10 @@ bibTypesArr = {
 }
 
 
-def format_publication_for_bibtex(publication):
+def format_publication_to_bibtex(publication, is_html=False):
+    newline = "<br/>" if is_html else "\n"
     attributes = bibTypesArr[publication.ptype]
-    formatted_bib = f"@{publication.ptype}{{ {publication.name},<br/>"
+    formatted_bib = f"@{publication.ptype}{{ {publication.name},{newline}"
 
     for att in attributes:
         value = getattr(publication, att, "")
@@ -141,9 +145,13 @@ def format_publication_for_bibtex(publication):
                 formatted_value = f"{{{{ {value} }}}}"
             else:
                 formatted_value = f"{{{value}}}"
-            formatted_bib += f"{att} = {formatted_value},<br/>"
+            formatted_bib += f"{att} = {formatted_value},{newline}"
 
-    formatted_bib = formatted_bib.rstrip(',<br/>') + "<br/>}"
+    formatted_bib = formatted_bib.rstrip(f",{newline}") + f"{newline}}}"
+
+    bibtex_chars = BibtexChars.objects.all()
+
+    for bibchar in bibtex_chars:
+        formatted_bib = formatted_bib.replace(bibchar.char, bibchar.bibcode)
+
     return formatted_bib
-
-

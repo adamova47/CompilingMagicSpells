@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatInputModule } from '@angular/material/input'
@@ -25,6 +25,8 @@ interface Data {
 })
 export class InsertDataComponent implements OnInit{
   @Input() target: any;
+  @Output() textInserted: EventEmitter<string> = new EventEmitter<string>();
+  
   username: string | null = localStorage.getItem('username');
   selectorData: Data = {
     usersPublications: [],
@@ -128,6 +130,11 @@ export class InsertDataComponent implements OnInit{
       this.target.value = textBefore + text + textAfter;
       this.target.focus();
       this.target.setSelectionRange(start + text.length, start + text.length);
+
+      // if we are manipulating a DOM element we should emit an event from the InsertDataComponent 
+      // whenever text is inserted, and then handle that event in the parent component to update 
+      // the ngModel binding
+      this.textInserted.emit(this.target.value);
     }
   }
 }

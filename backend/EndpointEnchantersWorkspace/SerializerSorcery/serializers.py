@@ -1,6 +1,7 @@
 from django.db import transaction, connection
 from rest_framework import serializers
-from .models import HomeCnc, Projects, Users, BibtexChars, HomeMeicogsci, Aiseminar, Userxproject, Publications
+from .models import HomeCnc, Projects, Users, BibtexChars, HomeMeicogsci, Aiseminar, Userxproject, Publications, \
+    Userxpublication, Projectxpublication
 from .utils import format_publications
 
 
@@ -29,6 +30,7 @@ class AdminFormProjectsSerializer(serializers.ModelSerializer):
         model = Projects
         fields = ['id', 'tag', 'projectname', 'description', 'vis', 'users']
 
+    # creates a new project instance and updates user associations
     def create(self, validated_data):
         user_ids = self.initial_data.get('users', [])
         try:
@@ -39,6 +41,7 @@ class AdminFormProjectsSerializer(serializers.ModelSerializer):
         except Exception as e:
             raise serializers.ValidationError({"error": str(e)})
 
+    # updates existing project instance and user associations
     def update(self, instance, validated_data):
         user_ids = self.initial_data.get('users', [])
         try:
@@ -73,6 +76,70 @@ class ProjectsSerializer(serializers.ModelSerializer):
         model = Projects
         fields = ['id', 'tag']
 
+
+# Admins publications form serializer
+class UsernamesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = ['id', 'username']
+
+
+class AdminPublicationsSerializer(serializers.ModelSerializer):
+    users = UsernamesSerializer(many=True, read_only=True)
+    projects = ProjectsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Publications
+        fields = ['id', 'vis', 'ptype', 'name', 'address', 'author', 'booktitle', 'edition', 'editor',
+                  'institution', 'journal', 'month', 'note', 'number', 'organization', 'pages', 'publisher',
+                  'school', 'series', 'title', 'volume', 'year', 'url', 'users', 'projects']
+
+    # creates a new publication instance and updates the associated users and projects
+    def create(self, validated_data):
+        user_ids = self.initial_data.get('users', [])
+        project_ids = self.initial_data.get('projects', [])
+        try:
+            with transaction.atomic():
+                publication = Publications.objects.create(**validated_data)
+                self.update_associations(publication, user_ids, project_ids)
+            return publication
+        except Exception as e:
+            raise serializers.ValidationError({"error": str(e)})
+
+    def update(self, instance, validated_data):
+        user_ids = self.initial_data.get('users', [])
+        project_ids = self.initial_data.get('projects', [])
+        try:
+            with transaction.atomic():
+                for attr, value in validated_data.items():
+                    setattr(instance, attr, value)
+                instance.save()
+                self.update_associations(instance, user_ids, project_ids)
+            return instance
+        except Exception as e:
+            raise serializers.ValidationError({"error": str(e)})
+
+    @staticmethod
+    def update_associations(publication, user_ids, project_ids):
+        with connection.cursor() as cursor:
+            # updating user associations
+            Userxpublication.objects.filter(publication=publication).delete()
+            for user_id in user_ids:
+                cursor.execute(
+                    'INSERT INTO userxpublication ("user", "publication") VALUES (%s, %s)',
+                    (user_id, publication.id)
+                )
+
+            # updating project associations
+            Projectxpublication.objects.filter(publication=publication).delete()
+            for project_id in project_ids:
+                cursor.execute(
+                    'INSERT INTO projectxpublication ("project", "publication") VALUES (%s, %s)',
+                    (project_id, publication.id)
+                )
+
+
+# -----------------------------------
 
 class HomeCncNavbarSerializer(serializers.ModelSerializer):
     class Meta:

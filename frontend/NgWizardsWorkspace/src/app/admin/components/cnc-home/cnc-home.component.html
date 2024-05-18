@@ -12,19 +12,19 @@
 </mat-toolbar>
 
 <section>
-    
-    <ace-editor #aceEditor
-    [(text)]="text"
-    [mode]="'html'"
-    [theme]="'clouds'"
-    [options]="options"
-    [readOnly]="false"
-    [autoUpdateContent]="true"></ace-editor>
+    <mat-card>
+        <ace-editor #aceEditor
+        [(text)]="text"
+        [mode]="'html'"
+        [theme]="'clouds'"
+        [options]="options"
+        [readOnly]="false"
+        [autoUpdateContent]="true"></ace-editor>
 
-    <app-insert-data [target]="aceEditor"></app-insert-data>
+        <app-insert-data [target]="aceEditor"></app-insert-data>
 
-    <div>
-        <button class="submit-button" mat-button (click)="updateContent()">Change Entry</button>
-    </div>
-
+        <div>
+            <button class="submit-button" mat-button (click)="updateContent()">Change Entry</button>
+        </div>
+    </mat-card>
 </section>

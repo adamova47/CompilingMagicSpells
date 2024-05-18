@@ -72,7 +72,7 @@ export class CncProjectsComponent implements OnInit {
     this.editing = true;
   }
 
-  updateVis(project: any): void {
+  toggleVisibility(project: any): void {
     let projectToChange = this.getEmptyProject();
     projectToChange = {...project, users: project.users.map((user: any) => user.id), vis: project.vis = !project.vis}
     this.adminService.updateProject(projectToChange.id!, projectToChange).subscribe(() => {
@@ -112,4 +112,9 @@ export class CncProjectsComponent implements OnInit {
   compareWithFn(userId1: number, userId2: number): boolean {
     return userId2 ? userId1 === userId2 : false;
   }
+
+  handleTextInsert(newText: string) {
+    this.currentProject.description = newText;
+  }
+  
 }

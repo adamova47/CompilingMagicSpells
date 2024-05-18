@@ -11,6 +11,10 @@ section {
     padding: 25px;
 }
 
+mat-card {
+    padding: 2%;
+}
+
 ace-editor {
     margin-bottom: 15px;
     min-height: 650px; 

@@ -1,19 +1,24 @@
+import bibtexparser
+import re
+
 from django.contrib.auth import authenticate
+from django.http import HttpResponse
 from rest_framework.authtoken.admin import User
 from rest_framework.authtoken.models import Token
+from rest_framework.filters import OrderingFilter
 from rest_framework.parsers import JSONParser
 
 from .models import HomeCnc, Publications, Projects, BibtexChars, HomeMeicogsci, Aiseminar
 from .serializers import (HomeCncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer,
                           LoginSerializer, BibtexCharSerializer, HomeMeicogsciNavbarSerializer,
                           HomeMeicogsciTextSerializer, AiseminarSerializer, AdminFormProjectsSerializer, UserSerializer,
-                          PublicationsSerializer, ProjectsSerializer)
+                          PublicationsSerializer, ProjectsSerializer, AdminPublicationsSerializer)
 
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .utils import format_publications, format_publication_for_bibtex
+from .utils import format_publications, format_publication_to_bibtex
 
 
 # ModelViewSet is a higher-level abstraction that automatically provides implementations for various CRUD operations
@@ -54,17 +59,23 @@ class CncGetHtmlContentByName(APIView):
             return Response({'error': str(e)}, status=500)
 
 
-class CncExportBib(APIView):
-    @staticmethod
-    def get(request, pub_id):
+class BaseGetBibtex(APIView):
+    include_details = False
+
+    @classmethod
+    def get(cls, request, pub_id):
         try:
             publication = Publications.objects.get(id=pub_id)
-            bibtex = format_publication_for_bibtex(publication)
+            bibtex = format_publication_to_bibtex(publication, cls.include_details)
             return Response({'bibtex': bibtex})
         except Publications.DoesNotExist:
             return Response({'error': 'Publication not found'}, status=404)
         except Exception as e:
             return Response({'error': str(e)}, status=500)
+
+
+class CncGetBibtex(BaseGetBibtex):
+    include_details = True
 
 
 class Login(APIView):
@@ -263,3 +274,114 @@ class AdminGetInsertData(APIView):
 
         formatted_publications = format_publications(list(publications))
         return Response(formatted_publications, status=200)
+
+
+class AdminPublications(viewsets.ModelViewSet):
+    queryset = Publications.objects.all().order_by('id')
+    serializer_class = AdminPublicationsSerializer
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['id', 'vis', 'ptype', 'name', 'author', 'year']
+
+
+BIBTEX_TO_MODEL_FIELD_MAP = {
+    'ID': 'name',
+}
+
+TYPE_MAPPING = {
+    'book': 'book',
+    'article': 'article',
+    'inproceedings': 'inproceedings',
+    'incollection': 'incollection',
+    'inbook': 'inbook',
+    'techreport': 'techreport',
+    'mastersthesis': 'mastersthesis',
+    'phdthesis': 'phdthesis',
+    'misc': 'misc',
+    'unpublished': 'unpublished'
+}
+
+
+class AdminProcessBibtexs(APIView):
+
+    @staticmethod
+    def generate_variations(bibcode):
+        base_bibcode = bibcode[1:-1]
+        variations = {bibcode, base_bibcode}
+        return variations
+
+    def replace_bibcodes(self, latex_string):
+        mappings = BibtexChars.objects.all().values('char', 'bibcode')
+
+        char_to_variations = {}  # dictionary to store the mapping from characters to their variations
+        for mapping in mappings:
+            variations = self.generate_variations(mapping['bibcode'])
+            char_to_variations[mapping['char']] = variations
+
+        all_variations = [(var, char) for char, vars in char_to_variations.items() for var in
+                          sorted(vars, reverse=True)]
+
+        for variation, char in all_variations:
+            latex_string = latex_string.replace(variation, char)
+
+        return latex_string
+
+    def post(self, request):
+        bibtex_data = self.replace_bibcodes(request.data.get('bibtexContent'))
+        print(bibtex_data)
+        try:
+            bib_database = bibtexparser.loads(bibtex_data)
+            for entry in bib_database.entries:
+                self.process_bibtex_entry(entry)
+            return Response({"message": "BibTeX data processed successfully"}, status=200)
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
+
+    def process_bibtex_entry(self, entry):
+        title = entry.get('title').strip()
+        entry_type = TYPE_MAPPING.get(entry.get('ENTRYTYPE'), 'misc')
+        try:
+            publication = Publications.objects.get(title=title)
+            publication.ptype = entry_type
+            self.update_publication(publication, entry)
+        except Publications.DoesNotExist:
+            self.create_publication(entry, entry_type)
+
+    @staticmethod
+    def update_publication(publication, entry):
+        for key, value in entry.items():
+            model_key = BIBTEX_TO_MODEL_FIELD_MAP.get(key, key)
+            if hasattr(publication, model_key):
+                setattr(publication, model_key, value.strip())
+        publication.save()
+
+    @staticmethod
+    def create_publication(entry, entry_type):
+        publication = Publications(vis=False, ptype=entry_type)
+        for key, value in entry.items():
+            model_key = BIBTEX_TO_MODEL_FIELD_MAP.get(key, key)
+            if hasattr(publication, model_key):
+                setattr(publication, model_key, value.strip())
+        publication.save()
+
+
+class AdminGetBibtex(BaseGetBibtex):
+    pass
+
+
+class AdminExportBibtexs(APIView):
+    @staticmethod
+    def post(request):
+        user_ids = request.data.get('userIds', [])
+        project_ids = request.data.get('projectIds', [])
+
+        queries = {}
+        if user_ids:
+            queries['users__id__in'] = user_ids
+        if project_ids:
+            queries['projects__id__in'] = project_ids
+
+        publications = Publications.objects.filter(**queries).distinct()
+        bibtex_entries = [format_publication_to_bibtex(pub) for pub in publications]
+        bibtex_string = '\n\n'.join(bibtex_entries)
+
+        return HttpResponse(bibtex_string, content_type="text/plain; charset=utf-8")

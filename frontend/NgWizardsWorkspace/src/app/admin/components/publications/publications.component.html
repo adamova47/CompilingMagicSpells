@@ -1,0 +1,349 @@
+<div id="publications">
+    <mat-card>
+        <form *ngIf="!latexMode" [formGroup]="publicationForm">
+
+            <div class="form-heading">
+                <h3>{{ editing ? 'Edit publication ' + publicationForm.get('id')?.value : 'New publication' }}</h3>
+                <button mat-raised-button (click)="changeMode()" type="button">LaTex</button>
+            </div>
+
+            <div class="grid-container">
+
+                <div class="grid-item">
+                    <mat-form-field>
+                        <mat-label> Add tags </mat-label>
+                        <mat-select [formControl]="projectControl" multiple>
+                            <mat-option *ngFor="let project of allProjects" [value]="project.id">{{ project.tag }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="grid-item">
+                    <mat-form-field>
+                        <mat-label> Add users </mat-label>
+                        <mat-select [formControl]="userControl" multiple>
+                            <mat-option *ngFor="let user of allUsers" [value]="user.id">{{ user.first_name }} {{ user.last_name }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+            </div>
+
+            <mat-checkbox formControlName="vis"> Visibility </mat-checkbox>
+
+            <mat-form-field>
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="ptype">
+                    <mat-option *ngFor="let type of types" [value]="type.value">{{ type.viewValue }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="publicationForm.get('ptype')?.hasError('required')">
+                    Type is required.
+                </mat-error>
+            </mat-form-field>
+
+            <div class="grid-container">
+                <div class="grid-item">
+
+                    <mat-form-field>
+                        <mat-label>Name</mat-label>
+                        <input matInput formControlName="name">
+                        <mat-error *ngIf="publicationForm.get('name')?.hasError('required')">
+                            Name is required.
+                        </mat-error>
+                        <mat-error *ngIf="publicationForm.get('name')?.hasError('maxlength')">
+                            Name cannot be more than 300 characters.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Author</mat-label>
+                        <input matInput formControlName="author">
+                        <mat-error *ngIf="publicationForm.get('author')?.hasError('required')">
+                            Author is required.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Title</mat-label>
+                        <input matInput formControlName="title">
+                        <mat-error *ngIf="publicationForm.get('title')?.hasError('required')">
+                            Title is required.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Year</mat-label>
+                        <input matInput formControlName="year">
+                        <mat-error *ngIf="publicationForm.get('year')?.hasError('required')">
+                            Year is required.
+                        </mat-error>
+                        <mat-error *ngIf="publicationForm.get('year')?.hasError('maxlength')">
+                            Year cannot be more than 5 characters.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Pages</mat-label>
+                        <input matInput formControlName="pages">
+                        <mat-error *ngIf="publicationForm.get('pages')?.hasError('maxlength')">
+                            Pages cannot be more than 50 characters.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Month</mat-label>
+                        <input matInput formControlName="month">
+                        <mat-error *ngIf="publicationForm.get('month')?.hasError('maxlength')">
+                            Month cannot be more than 50 characters.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Note</mat-label>
+                        <input matInput formControlName="note">
+                    </mat-form-field>
+
+                    <hr><span>+ &#64;article</span>
+
+                    <mat-form-field>
+                        <mat-label>Journal</mat-label>
+                        <input matInput formControlName="journal">
+                        <mat-error *ngIf="publicationForm.get('journal')?.hasError('required')">
+                            Journal is required.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Volume</mat-label>
+                        <input matInput formControlName="volume">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Number</mat-label>
+                        <input matInput formControlName="number">
+                        <mat-error *ngIf="publicationForm.get('number')?.hasError('maxlength')">
+                            Number cannot be more than 30 characters.
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+
+                <div class="grid-item">
+
+                    <hr><span>+ &#64;book, &#64;inbook</span>
+
+                    <mat-form-field>
+                        <mat-label>Editor</mat-label>
+                        <input matInput formControlName="editor">
+                        <mat-error *ngIf="publicationForm.get('editor')?.hasError('required')">
+                            Editor is required.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Publisher</mat-label>
+                        <input matInput formControlName="publisher">
+                        <mat-error *ngIf="publicationForm.get('publisher')?.hasError('required')">
+                            Publisher is required.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Series</mat-label>
+                        <input matInput formControlName="series">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Address</mat-label>
+                        <input matInput formControlName="address">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Edition</mat-label>
+                        <input matInput formControlName="edition">
+                    </mat-form-field>
+
+                    <hr><span>+ &#64;conference, &#64;incollection, &#64;inproceedings</span>
+
+                    <mat-form-field>
+                        <mat-label>Booktitle</mat-label>
+                        <input matInput formControlName="booktitle">
+                        <mat-error *ngIf="publicationForm.get('booktitle')?.hasError('required')">
+                            Booktitle is required.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Organization</mat-label>
+                        <input matInput formControlName="organization">
+                    </mat-form-field>
+
+                    <hr><span>+ &#64;mastersthesis, &#64;phdthesis</span>
+
+                    <mat-form-field>
+                        <mat-label>School</mat-label>
+                        <input matInput formControlName="school">
+                        <mat-error *ngIf="publicationForm.get('school')?.hasError('required')">
+                            School is required.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <hr><span>+ &#64;techreport</span>
+
+                    <mat-form-field>
+                        <mat-label>Institution</mat-label>
+                        <input matInput formControlName="institution">
+                        <mat-error *ngIf="publicationForm.get('institution')?.hasError('required')">
+                            Institution is required.
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+
+            </div>
+
+            <mat-form-field>
+                <mat-label>Url</mat-label>
+                <input matInput formControlName="url">
+            </mat-form-field>
+
+            <div id="publication-buttons">
+                <button mat-raised-button *ngIf="editing" [disabled]="!publicationForm.valid" (click)="updatePublication()"> Edit </button>
+                <button mat-raised-button *ngIf="editing" (click)="clearForm()"> Cancel </button>
+                <button mat-raised-button *ngIf="!editing" [disabled]="!publicationForm.valid" (click)="addPublication()"> Add </button>
+            </div>
+
+        </form>
+
+        <form *ngIf="latexMode" [formGroup]="bibtexForm">
+            <div class="form-heading">
+                <h3>BibTex</h3>
+                <button mat-raised-button (click)="changeMode()" type="button">Form</button>
+            </div>
+            <mat-form-field appearance="fill" style="margin: 10px 0;">
+                <mat-label>BibTeX Content</mat-label>
+                <textarea matInput
+                    formControlName="bibtexContent"
+                    placeholder="Type or drag and drop a BibTeX file here"
+                    rows = 20
+                    (drop)="onFileDrop($event)"
+                    (dragover)="onDragOver($event)"
+                    (dragleave)="onDragLeave($event)">
+                </textarea>
+                <mat-error *ngIf="bibtexForm.get('bibtexContent')?.hasError('required') && bibtexForm.get('bibtexContent')?.touched">
+                    BibTeX content is required.
+                </mat-error>
+                <mat-error *ngIf="bibtexForm.get('bibtexContent')?.hasError('backend')">
+                    {{ bibtexForm.get('bibtexContent')?.getError('backend') }}
+                </mat-error>
+                <mat-error *ngIf="bibtexForm.get('bibtexContent')?.hasError('bibtexFormat')">
+                    {{ bibtexForm.get('bibtexContent')?.getError('bibtexFormat') }}
+                </mat-error>                  
+            </mat-form-field>
+            <button mat-raised-button [disabled]="!bibtexForm.valid" (click)="importBibtex()">Import BibTeX</button>
+            </form>
+    </mat-card>
+
+    <mat-card class="middle-mat-card">
+        <app-export-bibtex></app-export-bibtex>
+    </mat-card>
+
+    <mat-card>
+        <div class="sorting-buttons">
+            Sort by: 
+            <button mat-raised-button (click)="onSortClick('id')">
+                ID
+                <mat-icon *ngIf="currentSortField === 'id' && currentSortOrder">
+                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                </mat-icon>
+            </button>
+            <button mat-raised-button (click)="onSortClick('vis')">
+                Visibility
+                <mat-icon *ngIf="currentSortField === 'vis' && currentSortOrder">
+                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                </mat-icon>
+            </button>
+            <button mat-raised-button (click)="onSortClick('ptype')">
+                Type
+                <mat-icon *ngIf="currentSortField === 'ptype' && currentSortOrder">
+                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                </mat-icon>
+            </button>
+            <button mat-raised-button (click)="onSortClick('name')">
+                Entry Name
+                <mat-icon *ngIf="currentSortField === 'name' && currentSortOrder">
+                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                </mat-icon>
+            </button>
+            <button mat-raised-button (click)="onSortClick('author')">
+                Authors Name
+                <mat-icon *ngIf="currentSortField === 'author' && currentSortOrder">
+                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                </mat-icon>
+            </button>
+            <button mat-raised-button (click)="onSortClick('year')">
+                Year
+                <mat-icon *ngIf="currentSortField === 'year' && currentSortOrder">
+                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                </mat-icon>
+            </button>
+        </div>
+
+        <mat-grid-list cols="3" rowHeight="600px" gutterSize="15px">
+            <mat-grid-tile *ngFor="let publication of publications | slice:(page-1) * pageSize : page * pageSize">
+                <div class="tile-content">
+                    <h4>
+                        <strong>
+                            ID: {{ publication.id }}
+                        </strong>
+                        , users: 
+                        <strong>
+                            {{ formatUserNames(publication.users) }}
+                        </strong>
+                    </h4>
+                    <hr>
+                    <p>Bib Type: &#64;{{ publication.ptype }}</p>
+                    <p>Entry Name: <strong>{{ publication.name }}</strong></p>
+                    <p>Author: {{ publication.author }}</p>
+                    <p>Title: {{ publication.title }}</p>
+                    <p>Year: <strong>{{ publication.year }}</strong></p>
+                    <p *ngIf="publication.pages">Pages: {{ publication.pages }}</p>
+                    <p *ngIf="publication.month">Month: {{ publication.month }}</p>
+                    <p *ngIf="publication.note">Note: {{ publication.note }}</p>
+                    <p *ngIf="publication.journal">Journal: {{ publication.journal }}</p>
+                    <p *ngIf="publication.volume">Volume: {{ publication.volume }}</p>
+                    <p *ngIf="publication.number">Number: {{ publication.number }}</p>
+                    <p *ngIf="publication.editor">Editor: {{ publication.editor }}</p>
+                    <p *ngIf="publication.publisher">Publisher: {{ publication.publisher }}</p>
+                    <p *ngIf="publication.series">Series: {{ publication.series }}</p>
+                    <p *ngIf="publication.address">Address: {{ publication.address }}</p>
+                    <p *ngIf="publication.edition">Edition: {{ publication.edition }}</p>
+                    <p *ngIf="publication.booktitle">Booktitle: {{ publication.booktitle }}</p>
+                    <p *ngIf="publication.organization">Organization: {{ publication.organization }}</p>
+                    <p *ngIf="publication.school">School: {{ publication.school }}</p>
+                    <p *ngIf="publication.Institution">Institution: {{ publication.institution }}</p>
+                    <hr>
+                    <p><strong>Url:</strong> {{ publication.url }}</p>
+                    <p><strong>Tags:</strong> {{ formatProjectTags(publication.projects) }}</p>
+                    <div class="action-buttons">
+                        <button mat-button (click)="editPublication(publication)"> Edit </button>
+                        <button mat-button (click)="toggleVisibility(publication)"> {{ publication.vis ? 'Disable' : 'Enable' }} </button>
+                        <button mat-button (click)="deletePublication(publication.id)"> Delete </button>
+                        <a [href]="'/cnc/exportBib/' + publication.id" target="_blank">
+                            <img src="assets/images/from_common/bibtex-icon.png" width="40" height="36" alt="bib"/>
+                        </a>
+                    </div>
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
+
+        <mat-paginator 
+            [length]="publications.length" 
+            [pageSize]="pageSize" 
+            [pageSizeOptions]="pageSizeOptions" 
+            (page)="changePage($event)"
+            showFirstLastButtons="true">
+        </mat-paginator>
+    </mat-card>
+    
+</div>

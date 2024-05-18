@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { AceEditorModule } from 'ngx-ace-editor-wrapper';
 
@@ -14,7 +15,7 @@ import { InsertDataComponent } from '../insert-data/insert-data.component';
 @Component({
   selector: 'app-cog-sci-home',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
+  imports: [MatCardModule, MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
   templateUrl: './cog-sci-home.component.html',
   styleUrl: './cog-sci-home.component.css'
 })

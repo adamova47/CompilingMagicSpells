@@ -5,19 +5,14 @@ button {
 
 .linkage-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* creates two columns of equal width */
+    grid-template-columns: repeat(2, 1fr);
     gap: 40px;
-    margin: 10px 0;
+    margin: 30px 0;
 }
 
 .form-item {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-.linkage-container button {
-    margin-top: 10.5px;
+    display: flex;
+    flex-direction: column;
 }
 
 .publist-container {
@@ -28,7 +23,7 @@ button {
     margin-bottom: 20px; 
 }
 
-.publist-container button {
+button {
     grid-column: 1 / -1;
     width: fit-content;
 }
