@@ -12,6 +12,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 
 import { TruncatePipe } from '../../services/truncate.pipe';
 import { AdminService } from '../../services/admin.service';
+import { InsertDataComponent } from '../insert-data/insert-data.component';
 
 interface Project {
   id: number | null;
@@ -26,7 +27,8 @@ interface Project {
   selector: 'app-cnc-projects',
   standalone: true,
   imports: [MatSortModule, MatTableModule, MatInputModule, MatCheckboxModule, MatSelectModule, 
-    MatCard, MatButtonModule, ReactiveFormsModule, FormsModule, CommonModule, TruncatePipe],
+    MatCard, MatButtonModule, ReactiveFormsModule, FormsModule, CommonModule, TruncatePipe, 
+    InsertDataComponent],
   templateUrl: './cnc-projects.component.html',
   styleUrl: './cnc-projects.component.css'
 })
@@ -68,6 +70,17 @@ export class CncProjectsComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     this.currentProject = { ...project, users: project.users.map((user: any) => user.id) };
     this.editing = true;
+  }
+
+  updateVis(project: any): void {
+    let projectToChange = this.getEmptyProject();
+    projectToChange = {...project, users: project.users.map((user: any) => user.id), vis: project.vis = !project.vis}
+    this.adminService.updateProject(projectToChange.id!, projectToChange).subscribe(() => {
+      if (this.currentProject.id === projectToChange.id) {
+        this.currentProject.vis = !this.currentProject.vis;
+      }
+      this.loadProjects();
+    });
   }
 
   clearForm(): void {

@@ -14,14 +14,18 @@
 
 <section>
     
-    <div ace-editor
+    <ace-editor #aceEditor
     [(text)]="text"
     [mode]="'html'"
     [theme]="'clouds'"
     [options]="options"
     [readOnly]="false"
-    [autoUpdateContent]="true"></div>
+    [autoUpdateContent]="true"></ace-editor>
 
-    <button class="submit-button" mat-button (click)="updateContent()">Change Entry</button>
+    <app-insert-data [target]="aceEditor"></app-insert-data>
+
+    <div>
+        <button class="submit-button" mat-button (click)="updateContent()">Change Entry</button>
+    </div>
 
 </section>

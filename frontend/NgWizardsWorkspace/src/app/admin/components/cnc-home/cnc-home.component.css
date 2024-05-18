@@ -8,10 +8,10 @@
 }
 
 section {
-    margin: 1%;
+    padding: 25px;
 }
 
-[ace-editor] {
+ace-editor {
     margin-bottom: 15px;
     min-height: 650px; 
     width: 100%; 
@@ -20,8 +20,7 @@ section {
     border-radius: 10px;
 }
 
-.submit-button {
+button {
     color: white !important;
     background-color: #004445 !important;
-    font-weight: bold;
 }

@@ -9,10 +9,12 @@ import { AceEditorModule } from 'ngx-ace-editor-wrapper';
 import { AdminService } from '../../services/admin.service';
 import { Subscription, filter } from 'rxjs';
 
+import { InsertDataComponent } from '../insert-data/insert-data.component';
+
 @Component({
   selector: 'app-cog-sci-home',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule],
+  imports: [MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
   templateUrl: './cog-sci-home.component.html',
   styleUrl: './cog-sci-home.component.css'
 })
@@ -43,7 +45,7 @@ export class CogSciHomeComponent implements OnInit, OnDestroy{
       this.navbarHyperlinks = data;
     });
 
-    this.router.events.pipe(
+    this.routeSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.getText();
@@ -61,13 +63,13 @@ export class CogSciHomeComponent implements OnInit, OnDestroy{
       this.routeSubscription = childRoute.paramMap.subscribe(paraMap => {
         this.part = paraMap.get('part') || 'intro';
         this.adminService.getCogSciText(this.part).subscribe(data => {  
-          this.text = data.data.text;
+          this.text = data.text;
         });
       });
     } else {
       this.part = 'intro';
       this.adminService.getCogSciText('intro').subscribe(data => {
-        this.text = data.data.text;
+        this.text = data.text;
       });
     }
   }

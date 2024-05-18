@@ -11,14 +11,14 @@ mat-card {
     gap: 10px;
 }
 
-button {
-    color: white !important;
-    background-color: #004445 !important;
-}
-
 .action-buttons {
     display: flex;
     gap: 8px;
+}
+
+button {
+    color: white !important;
+    background-color: #004445 !important;
 }
 
 mat-table {

@@ -9,10 +9,12 @@ import { AceEditorModule } from 'ngx-ace-editor-wrapper';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 
+import { InsertDataComponent } from '../insert-data/insert-data.component';
+
 @Component({
   selector: 'app-cnc-home',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule],
+  imports: [MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
   templateUrl: './cnc-home.component.html',
   styleUrl: './cnc-home.component.css'
 })
@@ -43,7 +45,7 @@ export class CncHomeComponent implements OnInit, OnDestroy{
       this.navbarHyperlinks = data;
     });
 
-    this.router.events.pipe(
+    this.routeSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.getText();
@@ -60,13 +62,13 @@ export class CncHomeComponent implements OnInit, OnDestroy{
       this.routeSubscription = childRoute.paramMap.subscribe(paraMap => {
         this.part = paraMap.get('part') || 'home';
         this.adminService.getCncHomeText(this.part).subscribe(data => {  
-          this.text = data.data.text;
+          this.text = data.text;
         });
       });
     } else {
       this.part = 'home';
       this.adminService.getCncHomeText('home').subscribe(data => {
-        this.text = data.data.text;
+        this.text = data.text;
       });
     }
   }
