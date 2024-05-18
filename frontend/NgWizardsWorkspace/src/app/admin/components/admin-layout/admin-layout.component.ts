@@ -37,7 +37,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy{
 
   updateView(): void {
     this.activatedRoute.firstChild?.params.subscribe(params => {
-      this.currentView = params['section'] || 'myhome';
+      this.currentView = params['section'];
     });
   }
 
