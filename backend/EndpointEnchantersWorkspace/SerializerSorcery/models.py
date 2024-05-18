@@ -14,11 +14,11 @@ class Aiseminar(models.Model):
     date = models.DateField()
     time = models.TimeField(null=True, blank=True)
     lecturer = models.CharField(max_length=256)
-    lecturerfrom = models.CharField(max_length=256)
-    url = models.CharField(max_length=256)
+    lecturerfrom = models.CharField(max_length=256, blank=True)
+    url = models.CharField(max_length=256, blank=True)
     title = models.CharField(max_length=256)
     abstract = models.TextField()
-    note = models.CharField(max_length=256)
+    note = models.CharField(max_length=256, blank=True)
 
     class Meta:
         db_table = 'aiseminar'
@@ -194,12 +194,11 @@ class HomeTomas(models.Model):
 
 class Projects(models.Model):
     id = models.BigAutoField(primary_key=True)
-    tag = models.CharField(max_length=100)
-    projectname = models.TextField()
-    description = models.TextField()
+    tag = models.CharField(max_length=100, blank=True)
+    projectname = models.TextField(blank=True)
+    description = models.TextField(blank=True)
     vis = models.BooleanField()
-    publications = models.ManyToManyField('Publications', through='Projectxpublication', related_name='projects',
-                                          blank=True)
+    publications = models.ManyToManyField('Publications', through='Projectxpublication', related_name='projects', blank=True)
 
     class Meta:
         managed = False
@@ -221,25 +220,25 @@ class Publications(models.Model):
     vis = models.BooleanField()
     ptype = models.CharField(max_length=200)
     name = models.CharField(max_length=300)
-    address = models.TextField()
+    address = models.TextField(blank=True)
     author = models.TextField()
-    booktitle = models.TextField()
-    edition = models.TextField()
-    editor = models.TextField()
-    institution = models.TextField()
-    journal = models.TextField()
-    month = models.CharField(max_length=50)
-    note = models.TextField()
-    number = models.CharField(max_length=30)
-    organization = models.TextField()
-    pages = models.CharField(max_length=50)
-    publisher = models.TextField()
-    school = models.TextField()
-    series = models.TextField()
+    booktitle = models.TextField(blank=True)
+    edition = models.TextField(blank=True)
+    editor = models.TextField(blank=True)
+    institution = models.TextField(blank=True)
+    journal = models.TextField(blank=True)
+    month = models.CharField(max_length=50, blank=True)
+    note = models.TextField(blank=True)
+    number = models.CharField(max_length=30, blank=True)
+    organization = models.TextField(blank=True)
+    pages = models.CharField(max_length=50, blank=True)
+    publisher = models.TextField(blank=True)
+    school = models.TextField(blank=True)
+    series = models.TextField(blank=True)
     title = models.TextField()
-    volume = models.TextField()
+    volume = models.TextField(blank=True)
     year = models.CharField(max_length=5)
-    url = models.TextField()
+    url = models.TextField(blank=True)
 
     class Meta:
         managed = False
