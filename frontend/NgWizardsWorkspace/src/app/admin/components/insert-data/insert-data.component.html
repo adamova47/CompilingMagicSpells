@@ -1,0 +1,61 @@
+<div class="linkage-container">
+    <div class="form-item">
+
+        <mat-form-field appearance="fill">
+    
+            <mat-label> Paper </mat-label>
+            
+            <mat-select [(ngModel)]="selectedPublicationId">
+                <mat-option *ngFor="let publication of selectorData.usersPublications" [value]="publication.id">
+                    {{ publication.name }}
+                </mat-option>
+            </mat-select>
+        
+        </mat-form-field>
+        <button mat-raised-button (click)="linkPublication()">Link paper</button>
+
+    </div>
+    <div class="form-item">
+        
+        <mat-form-field appearance="fill">
+
+            <mat-label> Project </mat-label>
+
+            <mat-select [(ngModel)]="selectedProjectId">
+                <mat-option *ngFor="let project of selectorData.usersProjects" [value]="project.id">
+                    {{ project.tag }}
+                </mat-option>
+            </mat-select>
+            
+        </mat-form-field>
+        <button mat-raised-button (click)="linkProject()"> Link project </button>
+
+    </div>
+</div>
+
+<div class="publist-container">
+    <mat-form-field appearance="fill">
+        <mat-label> Projects </mat-label>
+        <mat-select multiple [(ngModel)]="selectedProjects">
+            <mat-option *ngFor="let project of selectorData.allProjects" [value]="project.id">
+                {{ project.tag }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill">
+        <mat-label> Users </mat-label>
+        <mat-select multiple [(ngModel)]="selectedUsers">
+            <mat-option *ngFor="let user of selectorData.allUsers" [value]="user.id">
+                {{ user.first_name }} {{ user.last_name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill">
+        <mat-label> Visible entries </mat-label>
+        <input matInput [(ngModel)]="visibleEntries" name="vis-entries">
+    </mat-form-field>
+
+    <button mat-raised-button (click)="listPublications()">List publications</button>
+</div>

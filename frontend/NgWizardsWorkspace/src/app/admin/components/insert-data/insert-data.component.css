@@ -1,0 +1,35 @@
+button {
+    color: white !important;
+    background-color: #2C7873 !important;
+}
+
+.linkage-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* creates two columns of equal width */
+    gap: 40px;
+    margin: 10px 0;
+}
+
+.form-item {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.linkage-container button {
+    margin-top: 10.5px;
+}
+
+.publist-container {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    align-items: center;
+    column-gap: 10px;
+    margin-bottom: 20px; 
+}
+
+.publist-container button {
+    grid-column: 1 / -1;
+    width: fit-content;
+}
+
