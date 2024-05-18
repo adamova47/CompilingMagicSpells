@@ -1,6 +1,6 @@
 from django.db import transaction, connection
 from rest_framework import serializers
-from .models import HomeCnc, Projects, Users, BibtexChars, HomeMeicogsci, Aiseminar, Userxproject
+from .models import HomeCnc, Projects, Users, BibtexChars, HomeMeicogsci, Aiseminar, Userxproject, Publications
 from .utils import format_publications
 
 
@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name']
 
 
-class ProjectsSerializer(serializers.ModelSerializer):
+class AdminFormProjectsSerializer(serializers.ModelSerializer):
     users = UserSerializer(many=True, read_only=True)
 
     class Meta:
@@ -51,7 +51,8 @@ class ProjectsSerializer(serializers.ModelSerializer):
         except Exception as e:
             raise serializers.ValidationError({"error": str(e)})
 
-    def _update_user_associations(self, project, user_ids):
+    @staticmethod
+    def _update_user_associations(project, user_ids):
         with connection.cursor() as cursor:
             Userxproject.objects.filter(project=project).delete()
             for user_id in user_ids:
@@ -59,6 +60,18 @@ class ProjectsSerializer(serializers.ModelSerializer):
                     'INSERT INTO userxproject ("user", "project") VALUES (%s, %s)',
                     (user_id, project.id)
                 )
+
+
+class PublicationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Publications
+        fields = ['id', 'name']
+
+
+class ProjectsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Projects
+        fields = ['id', 'tag']
 
 
 class HomeCncNavbarSerializer(serializers.ModelSerializer):
