@@ -1,0 +1,32 @@
+<mat-toolbar class="custom-toolbar">
+    <mat-toolbar-row>
+        <div>
+            <a mat-button *ngFor="let item of navbarHyperlinks" 
+            [routerLink]="item.getname === 'publications' ? ['/admin', item.getname] :
+            item.getname === 'home' ? ['/admin/myhome', ''] :
+            ['/admin/myhome', item.getname]">
+                {{ item.name }}
+            </a>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<section>
+    <mat-card>
+        <mat-checkbox [(ngModel)]="data.leftpanel" name="left-panel"> Has left panel </mat-checkbox>
+
+        <ace-editor #aceEditor
+        [(text)]="data.text"
+        [mode]="'html'"
+        [theme]="'clouds'"
+        [options]="options"
+        [readOnly]="false"
+        [autoUpdateContent]="true"></ace-editor>
+
+        <app-insert-data [target]="aceEditor"></app-insert-data>
+
+        <div>
+            <button mat-raised-button class="submit-button" (click)="updateMyHomeData()">Change Entry</button>
+        </div>
+    </mat-card>
+</section>

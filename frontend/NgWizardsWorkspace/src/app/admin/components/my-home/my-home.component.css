@@ -1,0 +1,30 @@
+.custom-toolbar {
+    background-color: #2C7873;
+    color: white;
+}
+
+.mat-mdc-button:not(:disabled) {
+    color: white;
+}
+
+section {
+    padding: 25px;
+}
+
+mat-card {
+    padding: 2%;
+}
+
+ace-editor {
+    margin-bottom: 20px;
+    min-height: 650px;
+    width: 100%; 
+    overflow: auto; 
+    border: 2px solid #ccc; 
+    border-radius: 10px;
+}
+
+button {
+    color: white !important;
+    background-color: #004445 !important;
+}
