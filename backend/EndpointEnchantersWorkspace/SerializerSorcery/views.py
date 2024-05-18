@@ -1,11 +1,13 @@
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.admin import User
 from rest_framework.authtoken.models import Token
+from rest_framework.parsers import JSONParser
 
 from .models import HomeCnc, Publications, Projects, BibtexChars, HomeMeicogsci, Aiseminar
 from .serializers import (HomeCncNavbarSerializer, HomeCncTextSerializer, CncProjectsSerializer,
                           LoginSerializer, BibtexCharSerializer, HomeMeicogsciNavbarSerializer,
-                          HomeMeicogsciTextSerializer, AiseminarSerializer, ProjectsSerializer, UserSerializer)
+                          HomeMeicogsciTextSerializer, AiseminarSerializer, AdminFormProjectsSerializer, UserSerializer,
+                          PublicationsSerializer, ProjectsSerializer)
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -96,31 +98,14 @@ class AdminCncHomeNavbar(viewsets.ModelViewSet):
     serializer_class = HomeCncNavbarSerializer
 
 
-class AdminCncHomeText(APIView):
-    @staticmethod
-    def get(request, getname):
-        try:
-            data = HomeCnc.objects.get(getname=getname)
-            serializer = HomeCncTextSerializer(data)
-            return Response({'data': serializer.data}, status=200)
-        except HomeCnc.DoesNotExist:
-            return Response({'error': 'CncHome table not found.'}, status=404)
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
-
-    @staticmethod
-    def post(request, getname):
-        try:
-            data = HomeCnc.objects.get(getname=getname)
-            serializer = HomeCncTextSerializer(data, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=200)
-            return Response(serializer.errors, status=400)
-        except HomeCnc.DoesNotExist:
-            return Response({'error': 'CncHome table not found.'}, status=404)
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
+class AdminCncHomeText(viewsets.ModelViewSet):
+    queryset = HomeCnc.objects.all()
+    serializer_class = HomeCncTextSerializer
+    # lookup_field as 'getname', DRF will use this field to retrieve and update instances of
+    # the model instead of the default primary key
+    lookup_field = 'getname'
+    # this is a list of allowed HTTP method names that this view will accept
+    http_method_names = ['get', 'put']
 
 
 class AdminCogSciHomeNavbar(viewsets.ModelViewSet):
@@ -128,31 +113,11 @@ class AdminCogSciHomeNavbar(viewsets.ModelViewSet):
     serializer_class = HomeMeicogsciNavbarSerializer
 
 
-class AdminCogSciHomeText(APIView):
-    @staticmethod
-    def get(request, getname):
-        try:
-            data = HomeMeicogsci.objects.get(getname=getname)
-            serializer = HomeMeicogsciTextSerializer(data)
-            return Response({'data': serializer.data}, status=200)
-        except HomeCnc.DoesNotExist:
-            return Response({'error': 'CncHome table not found.'}, status=404)
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
-
-    @staticmethod
-    def post(request, getname):
-        try:
-            data = HomeMeicogsci.objects.get(getname=getname)
-            serializer = HomeMeicogsciTextSerializer(data, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=200)
-            return Response(serializer.errors, status=400)
-        except HomeCnc.DoesNotExist:
-            return Response({'error': 'CncHome table not found.'}, status=404)
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
+class AdminCogSciHomeText(viewsets.ModelViewSet):
+    queryset = HomeMeicogsci.objects.all()
+    serializer_class = HomeMeicogsciTextSerializer
+    lookup_field = 'getname'
+    http_method_names = ['get', 'put']
 
 
 class AdminBibtexChars(viewsets.ModelViewSet):
@@ -167,9 +132,134 @@ class AdminAiSeminar(viewsets.ModelViewSet):
 
 class AdminCncProjects(viewsets.ModelViewSet):
     queryset = Projects.objects.all().order_by('-id')
-    serializer_class = ProjectsSerializer
+    serializer_class = AdminFormProjectsSerializer
 
 
 class AdminUserList(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-id')
     serializer_class = UserSerializer
+    http_method_names = ['get']
+
+
+class AdminProjectsList(viewsets.ModelViewSet):
+    queryset = Projects.objects.all().order_by('-id')
+    serializer_class = ProjectsSerializer
+    http_method_names = ['get']
+
+
+def get_model_by_db_table(db_table_name):
+    from django.apps import apps
+    for model in apps.get_models():
+        if model._meta.db_table == db_table_name:
+            return model
+    return None
+
+
+def get_user_and_table(request):
+    username = request.GET.get('username')
+    try:
+        user = User.objects.get(username=username)
+        return user, user.tablename
+    except User.DoesNotExist:
+        return Response({'error': 'User not found.'}, status=404)
+
+
+class AdminMyHomeNavbar(APIView):
+    @staticmethod
+    def get(request):
+        user, tablename = get_user_and_table(request)
+        if isinstance(user, Response):  # Check if user fetching failed
+            return user
+
+        model = get_model_by_db_table(tablename)
+        if not model:
+            return Response({'error': 'Users table not found.'}, status=404)
+
+        data = model.objects.values('name', 'getname').order_by('id')
+        return Response({'data': data}, status=200)
+
+
+class AdminMyHomeData(APIView):
+    @staticmethod
+    def get_user_and_model(request):
+        user, tablename = get_user_and_table(request)
+        if isinstance(user, Response):
+            return user, None
+
+        model = get_model_by_db_table(tablename)
+        if not model:
+            return Response({'error': 'Table not found.'}, status=404), None
+
+        return None, model
+
+    def get(self, request):
+        error_response, model = self.get_user_and_model(request)
+        if error_response:
+            return error_response
+
+        getname = request.GET.get('getname')
+        data = model.objects.values('text', 'has_left').filter(getname=getname).first()
+        return Response({'data': data}, status=200)
+
+    def put(self, request):
+        error_response, model = self.get_user_and_model(request)
+        if error_response:
+            return error_response
+
+        getname = request.GET.get('getname')
+        obj = model.objects.filter(getname=getname).first()
+        if not obj:
+            return Response({'error': 'Object not found.'}, status=404)
+
+        data = JSONParser().parse(request)
+        for field in ['text', 'has_left']:
+            if field in data:
+                setattr(obj, field, data[field])
+        obj.save()
+        return Response({'message': 'Data fully updated successfully.'}, status=200)
+
+
+class AdminGetInsertData(APIView):
+    @staticmethod
+    def get(request, username):
+        try:
+            user = User.objects.get(username=username)
+            user_id = user.id
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
+
+        users_publications = Publications.objects.filter(userxpublication__user_id=user_id)
+        user_pub_serializer = PublicationsSerializer(users_publications, many=True)
+
+        users_projects = Projects.objects.filter(userxproject__user__id=user_id)
+        users_proj_serializer = ProjectsSerializer(users_projects, many=True)
+
+        projects = Projects.objects.all().order_by('id')
+        projects_serializer = ProjectsSerializer(projects, many=True)
+
+        users = User.objects.all().order_by('id')
+        users_serializer = UserSerializer(users, many=True)
+
+        return Response({
+            'users_publications': user_pub_serializer.data,
+            'users_projects': users_proj_serializer.data,
+            'all_projects': projects_serializer.data,
+            'all_users': users_serializer.data
+        })
+
+    @staticmethod
+    def post(request):
+        project_ids = request.data.get('project_ids', [])
+        user_ids = request.data.get('user_ids', [])
+
+        queries = {}
+        if project_ids:
+            queries['projects__id__in'] = project_ids
+        if user_ids:
+            queries['users__id__in'] = user_ids
+        queries['vis'] = True
+
+        publications = Publications.objects.filter(**queries).distinct().values()
+
+        formatted_publications = format_publications(list(publications))
+        return Response(formatted_publications, status=200)
