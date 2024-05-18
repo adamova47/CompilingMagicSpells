@@ -3,7 +3,7 @@
   <h3>{{ project.projectname }}</h3>
   <p>{{ project.description }}</p>
   <h4>Related publications:</h4>
-  <div class="publ">
+  <div class="publications">
     <ul>
       <!-- show the first three publications -->
       <li *ngFor="let pub of project.formatted_publications | slice:0:3" [innerHTML]="pub"></li>
@@ -13,7 +13,7 @@
       </ng-container>
     </ul>
     
-    <button (click)="togglePublications(project)" class="btn btn-link">
+    <button *ngIf="project.formatted_publications.length > 3" (click)="togglePublications(project)" class="btn btn-link">
         <i class="{{ project.showAllPublications ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill' }}"></i>
     </button>
 

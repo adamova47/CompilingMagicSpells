@@ -6,3 +6,19 @@ a {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+ul { margin: 0; }
+.btn-link {
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 5px;
+    cursor: pointer;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-link:focus {
+    outline: none;
+    box-shadow: none;
+}
