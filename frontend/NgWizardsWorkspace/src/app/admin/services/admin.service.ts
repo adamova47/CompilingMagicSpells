@@ -34,13 +34,35 @@ export class AdminService {
     return this.http.get(`${this.apiUrl}${section}/`);
   }
 
+  // insertdata
+  getUserInsertData(username: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}insertdata/${username}`);
+  }
+
+  getPublicationsByProjectsAndUsers(projectIds: number[], userIds: number[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}insertdata/`, { project_ids: projectIds, user_ids: userIds });
+  }
+
+  // myhome
+  getMyHomeHyperlinks(username: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}myhomenavbar/?username=${username}`);
+  }
+
+  getMyHomeData(username: string, getname: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}myhomedata/?username=${username}&getname=${getname}`);
+  }
+
+  updateMyHomeData(username: string, getname: string, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}myhomedata/?username=${username}&getname=${getname}`, data);
+  }
+
   // cnchome
   getCncHomeText(part: string): Observable<any> {
     return this.http.get(`${this.apiUrl}cnchometext/${part}/`);
   }
 
   updateCncHomeText(part: string, text: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}cnchometext/${part}/`, { text });
+    return this.http.put(`${this.apiUrl}cnchometext/${part}/`, { text });
   }
 
   // bibtexchars
@@ -65,8 +87,8 @@ export class AdminService {
     return this.http.get(`${this.apiUrl}cogscitext/${part}/`);
   }
 
-  updateCogSciText(part: string, text: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}cogscitext/${part}/`, { text });
+  updateCogSciText(part: string, text: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}cogscitext/${part}/`, { text });
   }
 
   // aiseminar
@@ -103,8 +125,15 @@ export class AdminService {
     return this.http.delete(`${this.apiUrl}projects/${id}/`);
   }
 
+  // publications
+
+
+  // general 
   getUsers(): Observable<any> {
-    return this.http.get(`${this.apiUrl}users/`)
+    return this.http.get(`${this.apiUrl}userslist/`)
   }
 
+  getProjects(): Observable<any> {
+    return this.http.get(`${this.apiUrl}projectslist/`)
+  }
 }
