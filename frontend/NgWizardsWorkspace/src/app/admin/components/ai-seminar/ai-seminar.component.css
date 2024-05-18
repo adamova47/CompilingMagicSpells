@@ -11,14 +11,14 @@ mat-card {
     gap: 10px;
 }
 
-button {
-    color: white !important;
-    background-color: #004445 !important;
-}
-
 .action-buttons {
     display: flex;
     gap: 8px;
+}
+
+button {
+    color: white !important;
+    background-color: #004445 !important;
 }
 
 mat-table {
@@ -46,8 +46,8 @@ mat-table {
 .mat-column-datetime {
     word-wrap: break-word !important;
     white-space: unset !important;
-    flex: 0 0 7% !important;
-    width: 7% !important;
+    flex: 0 0 10% !important;
+    width: 10% !important;
     overflow-wrap: break-word;
     word-wrap: break-word;
 
@@ -62,7 +62,7 @@ mat-table {
 .mat-column-lecturerfrom {
     word-wrap: break-word !important;
     white-space: unset !important;
-    flex: 0 0 12% !important;
+    flex: 0 0 10% !important;
     width: 12% !important;
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -94,8 +94,8 @@ mat-table {
 .mat-column-url {
     word-wrap: break-word !important;
     white-space: unset !important;
-    flex: 0 0 20% !important;
-    width: 20% !important;
+    flex: 0 0 18% !important;
+    width: 18% !important;
     overflow-wrap: break-word;
     word-wrap: break-word;
 
