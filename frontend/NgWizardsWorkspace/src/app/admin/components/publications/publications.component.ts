@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, FormArray, FormsModule, ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
 
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
-import { MatCardModule } from '@angular/material/card';
+import { MatCard } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 import { AdminService } from '../../services/admin.service';
 import { ExportBibtexComponent } from '../export-bibtex/export-bibtex.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { TruncatePipe } from '../../services/truncate.pipe';
 
 export function bibtexValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -35,13 +36,17 @@ export function bibtexValidator(): ValidatorFn {
 @Component({
   selector: 'app-publications',
   standalone: true,
-  imports: [MatIconModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatGridListModule, MatCardModule, 
-    MatPaginator, MatButtonModule, FormsModule, ReactiveFormsModule, CommonModule, ExportBibtexComponent],
+  imports: [MatPaginator, MatSortModule, MatTableModule, MatInputModule, MatCheckboxModule, MatSelectModule, 
+    MatCard, MatButtonModule, ReactiveFormsModule, FormsModule, CommonModule, ExportBibtexComponent, TruncatePipe],
   templateUrl: './publications.component.html',
   styleUrl: './publications.component.css'
 })
 export class PublicationsComponent implements OnInit {
-  publications: any[] = [];
+  // publications: any[] = [];
+  displayedColumns: string[] = ['id', 'ptype', 'name', 'author', 'year', 'title', 'url', 'actions'];
+  publications: MatTableDataSource<any> = new MatTableDataSource();
+  @ViewChild(MatSort, {static: true}) sort = new MatSort();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   editing = false;
   latexMode = false;
@@ -73,7 +78,7 @@ export class PublicationsComponent implements OnInit {
   ];
   allUsers: any[] = [];
   allProjects: any[] = [];
-
+  
   constructor (private adminService: AdminService, private fb: FormBuilder) {
     this.initBibtexForm();
     this.initPublicationForm();
@@ -150,10 +155,11 @@ export class PublicationsComponent implements OnInit {
   }
 
   loadPublications(): void {
-    const sortParam = this.currentSortOrder ? `${this.currentSortOrder === 'asc' ? '' : '-'}${this.currentSortField}` : '';
-    this.adminService.getPublicationsList(sortParam).subscribe(
+    this.adminService.getPublicationsList().subscribe(
       data => {
-        this.publications = data;
+        this.publications.data = data;
+        this.publications.sort = this.sort;
+        this.publications.paginator = this.paginator;
       },
       error => {
         console.error('Error loading publications!', error);
@@ -318,25 +324,6 @@ export class PublicationsComponent implements OnInit {
 
   formatProjectTags(projects: any[]): string {
     return projects.map(project => `${project.tag}`).join(', ');
-  }
-
-  // cycles through the sorting states
-  onSortClick(field: string) {
-    if (this.currentSortField === field) {
-      if (this.currentSortOrder === 'asc') {
-        this.currentSortOrder = 'desc';
-      } else if (this.currentSortOrder === 'desc') {
-        this.currentSortOrder = ''; // reset to no sorting
-        this.currentSortField = ''; // reset sortfield as well
-      } else {
-        this.currentSortOrder = 'asc';
-      }
-    } else {
-      // on clicking a new field, start with ascending order for the field
-      this.currentSortField = field;
-      this.currentSortOrder = 'asc';
-    }
-    this.loadPublications();
   }
 
   // pagination

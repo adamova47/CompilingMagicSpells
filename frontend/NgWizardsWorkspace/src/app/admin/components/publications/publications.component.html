@@ -248,102 +248,63 @@
         <app-export-bibtex></app-export-bibtex>
     </mat-card>
 
-    <mat-card>
-        <div class="sorting-buttons">
-            Sort by: 
-            <button mat-raised-button (click)="onSortClick('id')">
-                ID
-                <mat-icon *ngIf="currentSortField === 'id' && currentSortOrder">
-                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-                </mat-icon>
-            </button>
-            <button mat-raised-button (click)="onSortClick('vis')">
-                Visibility
-                <mat-icon *ngIf="currentSortField === 'vis' && currentSortOrder">
-                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-                </mat-icon>
-            </button>
-            <button mat-raised-button (click)="onSortClick('ptype')">
-                Type
-                <mat-icon *ngIf="currentSortField === 'ptype' && currentSortOrder">
-                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-                </mat-icon>
-            </button>
-            <button mat-raised-button (click)="onSortClick('name')">
-                Entry Name
-                <mat-icon *ngIf="currentSortField === 'name' && currentSortOrder">
-                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-                </mat-icon>
-            </button>
-            <button mat-raised-button (click)="onSortClick('author')">
-                Authors Name
-                <mat-icon *ngIf="currentSortField === 'author' && currentSortOrder">
-                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-                </mat-icon>
-            </button>
-            <button mat-raised-button (click)="onSortClick('year')">
-                Year
-                <mat-icon *ngIf="currentSortField === 'year' && currentSortOrder">
-                    {{ currentSortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
-                </mat-icon>
-            </button>
-        </div>
+    <mat-table class="mat-elevation-z4" [dataSource]="publications" matSort>
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+            <mat-cell *matCellDef="let publication">{{ publication.id }}</mat-cell>
+        </ng-container>
 
-        <mat-grid-list cols="3" rowHeight="600px" gutterSize="15px">
-            <mat-grid-tile *ngFor="let publication of publications | slice:(page-1) * pageSize : page * pageSize">
-                <div class="tile-content">
-                    <h4>
-                        <strong>
-                            ID: {{ publication.id }}
-                        </strong>
-                        , users: 
-                        <strong>
-                            {{ formatUserNames(publication.users) }}
-                        </strong>
-                    </h4>
-                    <hr>
-                    <p>Bib Type: &#64;{{ publication.ptype }}</p>
-                    <p>Entry Name: <strong>{{ publication.name }}</strong></p>
-                    <p>Author: {{ publication.author }}</p>
-                    <p>Title: {{ publication.title }}</p>
-                    <p>Year: <strong>{{ publication.year }}</strong></p>
-                    <p *ngIf="publication.pages">Pages: {{ publication.pages }}</p>
-                    <p *ngIf="publication.month">Month: {{ publication.month }}</p>
-                    <p *ngIf="publication.note">Note: {{ publication.note }}</p>
-                    <p *ngIf="publication.journal">Journal: {{ publication.journal }}</p>
-                    <p *ngIf="publication.volume">Volume: {{ publication.volume }}</p>
-                    <p *ngIf="publication.number">Number: {{ publication.number }}</p>
-                    <p *ngIf="publication.editor">Editor: {{ publication.editor }}</p>
-                    <p *ngIf="publication.publisher">Publisher: {{ publication.publisher }}</p>
-                    <p *ngIf="publication.series">Series: {{ publication.series }}</p>
-                    <p *ngIf="publication.address">Address: {{ publication.address }}</p>
-                    <p *ngIf="publication.edition">Edition: {{ publication.edition }}</p>
-                    <p *ngIf="publication.booktitle">Booktitle: {{ publication.booktitle }}</p>
-                    <p *ngIf="publication.organization">Organization: {{ publication.organization }}</p>
-                    <p *ngIf="publication.school">School: {{ publication.school }}</p>
-                    <p *ngIf="publication.Institution">Institution: {{ publication.institution }}</p>
-                    <hr>
-                    <p><strong>Url:</strong> {{ publication.url }}</p>
-                    <p><strong>Tags:</strong> {{ formatProjectTags(publication.projects) }}</p>
-                    <div class="action-buttons">
-                        <button mat-button (click)="editPublication(publication)"> Edit </button>
-                        <button mat-button (click)="toggleVisibility(publication)"> {{ publication.vis ? 'Disable' : 'Enable' }} </button>
-                        <button mat-button (click)="deletePublication(publication.id)"> Delete </button>
-                        <a [href]="'/cnc/exportBib/' + publication.id" target="_blank">
-                            <img src="assets/images/from_common/bibtex-icon.png" width="40" height="36" alt="bib"/>
-                        </a>
-                    </div>
-                </div>
-            </mat-grid-tile>
-        </mat-grid-list>
+        <ng-container matColumnDef="ptype">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+            <mat-cell *matCellDef="let publication">{{ publication.ptype }}</mat-cell>
+        </ng-container>
 
-        <mat-paginator 
-            [length]="publications.length" 
-            [pageSize]="pageSize" 
-            [pageSizeOptions]="pageSizeOptions" 
-            (page)="changePage($event)"
-            showFirstLastButtons="true">
-        </mat-paginator>
-    </mat-card>
-    
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Entry Name</mat-header-cell>
+            <mat-cell *matCellDef="let publication">{{ publication.name }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="author">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Author</mat-header-cell>
+            <mat-cell *matCellDef="let publication">{{ publication.author }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="year">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Year</mat-header-cell>
+            <mat-cell *matCellDef="let publication">{{ publication.year }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
+            <mat-cell *matCellDef="let publication">{{ publication.title | truncate:50 }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="url">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Url</mat-header-cell>
+            <mat-cell *matCellDef="let publication">{{ publication.url | truncate:35 }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+            <mat-cell *matCellDef="let publication" class="action-buttons">
+                <button mat-button (click)="editPublication(publication)">Edit</button>
+                <button mat-button (click)="toggleVisibility(publication)">{{ publication.vis ? 'Disable' : 'Enable' }}</button>
+                <button mat-button (click)="deletePublication(publication.id)">Delete</button>
+                <a [href]="'/cnc/exportBib/' + publication.id" target="_blank">
+                    <img src="assets/images/from_common/bibtex-icon.png" width="40" height="36" alt="bib"/>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator 
+        [length]="publications.data.length"
+        [pageSize]="pageSize" 
+        [pageSizeOptions]="pageSizeOptions" 
+        (page)="changePage($event)"
+        showFirstLastButtons="true">
+    </mat-paginator>
 </div>
