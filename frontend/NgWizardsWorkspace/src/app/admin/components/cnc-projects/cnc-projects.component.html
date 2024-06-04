@@ -61,7 +61,7 @@
 
         <ng-container matColumnDef="description">
             <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
-            <mat-cell *matCellDef="let project"> {{project.description}} </mat-cell>
+            <mat-cell *matCellDef="let project"> {{project.description | truncate:100 }} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="users">

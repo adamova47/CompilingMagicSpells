@@ -126,12 +126,8 @@ export class AdminService {
   }
 
   // publications
-  getPublicationsList(sort: string = ''): Observable<any> {
-    let params = new HttpParams();
-    if (sort) {
-      params = params.append('ordering', sort);
-    }
-    return this.http.get(`${this.apiUrl}publications/`, { params });
+  getPublicationsList(): Observable<any> {
+    return this.http.get(`${this.apiUrl}publications/`);
   }
 
   addPublication(publication: any): Observable<any> {

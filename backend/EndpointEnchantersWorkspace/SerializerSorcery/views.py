@@ -1,11 +1,9 @@
 import bibtexparser
-import re
 
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from rest_framework.authtoken.admin import User
 from rest_framework.authtoken.models import Token
-from rest_framework.filters import OrderingFilter
 from rest_framework.parsers import JSONParser
 
 from .models import HomeCnc, Publications, Projects, BibtexChars, HomeMeicogsci, Aiseminar
@@ -279,8 +277,7 @@ class AdminGetInsertData(APIView):
 class AdminPublications(viewsets.ModelViewSet):
     queryset = Publications.objects.all().order_by('id')
     serializer_class = AdminPublicationsSerializer
-    filter_backends = [OrderingFilter]
-    ordering_fields = ['id', 'vis', 'ptype', 'name', 'author', 'year']
+    http_method_names = ['get']
 
 
 BIBTEX_TO_MODEL_FIELD_MAP = {
