@@ -42,7 +42,6 @@ export function bibtexValidator(): ValidatorFn {
   styleUrl: './publications.component.css'
 })
 export class PublicationsComponent implements OnInit {
-  // publications: any[] = [];
   displayedColumns: string[] = ['id', 'ptype', 'name', 'author', 'year', 'title', 'url', 'actions'];
   publications: MatTableDataSource<any> = new MatTableDataSource();
   @ViewChild(MatSort, {static: true}) sort = new MatSort();
