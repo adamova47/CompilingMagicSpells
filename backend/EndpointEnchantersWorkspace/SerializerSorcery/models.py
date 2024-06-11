@@ -194,8 +194,8 @@ class HomeTomas(models.Model):
 
 class Projects(models.Model):
     id = models.BigAutoField(primary_key=True)
-    tag = models.CharField(max_length=100, blank=True)
-    projectname = models.TextField(blank=True)
+    tag = models.CharField(max_length=100)
+    projectname = models.TextField()
     description = models.TextField(blank=True)
     vis = models.BooleanField()
     publications = models.ManyToManyField('Publications', through='Projectxpublication', related_name='projects', blank=True)

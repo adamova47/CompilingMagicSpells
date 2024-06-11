@@ -1,41 +1,43 @@
 <div id="projects">
-    <mat-card>
-        <h3>{{ editing ? 'Edit project ' + currentProject.id : 'New project' }}</h3>
+    <form #form="ngForm">
+        <mat-card>
+            <h3>{{ editing ? 'Edit project ' + currentProject.id : 'New project' }}</h3>
 
-        <mat-checkbox [(ngModel)]="currentProject.vis" name="visibility"> Visibility </mat-checkbox>
+            <mat-checkbox [(ngModel)]="currentProject.vis" name="visibility"> Visibility </mat-checkbox>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Add users </mat-label>
-            <mat-select multiple [(ngModel)]="currentProject.users" [compareWith]="compareWithFn">
-                <mat-option *ngFor="let user of users" [value]="user.id">
-                    {{ user.first_name }} {{ user.last_name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Add users</mat-label>
+                <mat-select multiple [(ngModel)]="currentProject.users" [compareWith]="compareWithFn" name="users">
+                    <mat-option *ngFor="let user of users" [value]="user.id">
+                        {{ user.first_name }} {{ user.last_name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Tag name </mat-label>
-            <input matInput [(ngModel)]="currentProject.tag" name="tagname">
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Tag name</mat-label>
+                <input matInput [(ngModel)]="currentProject.tag" name="tagname" required>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Title </mat-label>
-            <input matInput [(ngModel)]="currentProject.projectname" name="projectname">
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Title</mat-label>
+                <input matInput [(ngModel)]="currentProject.projectname" name="projectname" required>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Description </mat-label>
-            <textarea #descriptionTextArea matInput [(ngModel)]="currentProject.description" name="description" rows="5"></textarea>
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Description</mat-label>
+                <textarea #descriptionTextArea matInput [(ngModel)]="currentProject.description" name="description" rows="5"></textarea>
+            </mat-form-field>
 
-        <app-insert-data [target]="descriptionTextArea" (textInserted)="handleTextInsert($event)"></app-insert-data>
+            <app-insert-data [target]="descriptionTextArea" (textInserted)="handleTextInsert($event)"></app-insert-data>
 
-        <div id="projects-buttons">
-            <button mat-raised-button *ngIf="editing" (click)="updateProject()"> Edit </button>
-            <button mat-raised-button *ngIf="editing" (click)="clearForm()"> Cancel </button>
-            <button mat-raised-button *ngIf="!editing" (click)="addProject()"> Add </button>
-        </div>
-    </mat-card>
+            <div id="projects-buttons">
+                <button mat-raised-button *ngIf="editing" (click)="updateProject()" [disabled]="!form.valid">Edit</button>
+                <button mat-raised-button *ngIf="editing" (click)="clearForm()"> Cancel </button>
+                <button mat-raised-button *ngIf="!editing" (click)="addProject()" [disabled]="!form.valid">Add</button>
+            </div>
+        </mat-card>
+    </form>
 
     <mat-table class="projects-table mat-elevation-z4" [dataSource]="projects" matSort>
 

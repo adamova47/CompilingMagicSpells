@@ -277,7 +277,6 @@ class AdminGetInsertData(APIView):
 class AdminPublications(viewsets.ModelViewSet):
     queryset = Publications.objects.all().order_by('id')
     serializer_class = AdminPublicationsSerializer
-    http_method_names = ['get', 'put']
 
 
 BIBTEX_TO_MODEL_FIELD_MAP = {
@@ -378,7 +377,16 @@ class AdminExportBibtexs(APIView):
             queries['projects__id__in'] = project_ids
 
         publications = Publications.objects.filter(**queries).distinct()
-        bibtex_entries = [format_publication_to_bibtex(pub) for pub in publications]
-        bibtex_string = '\n\n'.join(bibtex_entries)
+
+        bibtex_entries = []
+        for pub in publications:
+            entry = format_publication_to_bibtex(pub)
+            if pub.url:
+                entry_with_url = f"{entry}\nurl = {{{pub.url}}}\n"
+            else:
+                entry_with_url = f"{entry}\n"
+            bibtex_entries.append(entry_with_url)
+
+        bibtex_string = '\n'.join(bibtex_entries)
 
         return HttpResponse(bibtex_string, content_type="text/plain; charset=utf-8")

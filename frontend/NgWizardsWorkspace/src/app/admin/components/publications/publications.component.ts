@@ -53,9 +53,6 @@ export class PublicationsComponent implements OnInit {
   page = 1;
   pageSize = 9;
   pageSizeOptions: number[] = [9, 12, 15, 18, 21, 24, 27, 30];
-  
-  currentSortField: string = '';
-  currentSortOrder: string = '';
 
   bibtexForm!: FormGroup;
   publicationForm!: FormGroup;
@@ -317,13 +314,14 @@ export class PublicationsComponent implements OnInit {
     });
   }
 
-  formatUserNames(users: any[]): string {
+  
+/*   formatUserNames(users: any[]): string {
     return users.map(user => `${user.username}`).join(', ');
   }
 
   formatProjectTags(projects: any[]): string {
     return projects.map(project => `${project.tag}`).join(', ');
-  }
+  } */
 
   // pagination
   changePage(event: PageEvent) {
