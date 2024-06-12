@@ -16,12 +16,18 @@
 
             <mat-form-field appearance="fill">
                 <mat-label>Tag name</mat-label>
-                <input matInput [(ngModel)]="currentProject.tag" name="tagname" required>
+                <input matInput [(ngModel)]="currentProject.tag" name="tagname" required #tag="ngModel">
+                <mat-error *ngIf="tag.errors?.['required']">
+                    Tag name is required.
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill">
                 <mat-label>Title</mat-label>
-                <input matInput [(ngModel)]="currentProject.projectname" name="projectname" required>
+                <input matInput [(ngModel)]="currentProject.projectname" name="projectname" required #title="ngModel">
+                <mat-error *ngIf="title.errors?.['required']">
+                    Title is required.
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill">

@@ -130,6 +130,9 @@ export class AiSeminarComponent implements OnInit{
   }
 
   deleteSeminar(id: number): void {
+    if (this.currentSeminar.id === id) {
+      this.clearForm();
+    }
     this.adminService.deleteAiseminar(id).subscribe({
       next: () => {
         this.notify.showSuccess('Seminar deleted successfully.');

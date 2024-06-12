@@ -13,6 +13,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { TruncatePipe } from '../../services/truncate.pipe';
 import { AdminService } from '../../services/admin.service';
 import { InsertDataComponent } from '../insert-data/insert-data.component';
+import { NotificationService } from '../../services/notification.service';
 
 interface Project {
   id: number | null;
@@ -43,7 +44,7 @@ export class CncProjectsComponent implements OnInit {
 
   @ViewChild(MatSort) sort: MatSort = new MatSort();
 
-  constructor (private adminService: AdminService) {}
+  constructor (private adminService: AdminService, private notify: NotificationService) {}
 
   ngOnInit(): void {
     this.loadProjects();
@@ -60,9 +61,15 @@ export class CncProjectsComponent implements OnInit {
   }
 
   updateProject(): void {
-    this.adminService.updateProject(this.currentProject.id!, this.currentProject).subscribe(() => {
-      this.loadProjects();
-      this.clearForm();
+    this.adminService.updateProject(this.currentProject.id!, this.currentProject).subscribe({
+      next: () => {
+        this.notify.showSuccess('Project updated successfully.');
+        this.loadProjects();
+        this.clearForm();
+      },
+      error: (error) => {
+        this.notify.showError('Failed to update project: ' + (error.error.message || 'Unknown error'));
+      }
     });
   }
 
@@ -75,11 +82,18 @@ export class CncProjectsComponent implements OnInit {
   toggleVisibility(project: any): void {
     let projectToChange = this.getEmptyProject();
     projectToChange = {...project, users: project.users.map((user: any) => user.id), vis: project.vis = !project.vis}
-    this.adminService.updateProject(projectToChange.id!, projectToChange).subscribe(() => {
-      if (this.currentProject.id === projectToChange.id) {
-        this.currentProject.vis = !this.currentProject.vis;
+
+    this.adminService.updateProject(projectToChange.id!, projectToChange).subscribe({
+      next: () => {
+        if (this.currentProject.id === projectToChange.id) {
+          this.currentProject.vis = !this.currentProject.vis;
+        }
+        this.notify.showSuccess('Project visibility toggled.');
+        this.loadProjects();
+      },
+      error: (error) => {
+        this.notify.showError('Failed to toggle project visibility: ' + (error.error.message || 'Unknown error'));
       }
-      this.loadProjects();
     });
   }
 
@@ -89,15 +103,30 @@ export class CncProjectsComponent implements OnInit {
   }
 
   addProject(): void {
-    this.adminService.addProject(this.currentProject).subscribe(() => {
-      this.loadProjects();
-      this.clearForm();
+    this.adminService.addProject(this.currentProject).subscribe({
+      next: () => {
+        this.notify.showSuccess('Project updated successfully.');
+        this.loadProjects();
+        this.clearForm();
+      },
+      error: (error) => {
+        this.notify.showError('Failed to update project: ' + (error.error.message || 'Unknown error'));
+      }
     });
   }
 
   deleteProject(id: number): void {
-    this.adminService.deleteProject(id).subscribe(() => {
-      this.loadProjects();
+    if (this.currentProject.id === id) {
+      this.clearForm();
+    }
+    this.adminService.deleteProject(id).subscribe({
+      next: () => {
+        this.notify.showSuccess('Project deleted successfully.');
+        this.loadProjects();
+      },
+      error: (error) => {
+        this.notify.showError('Failed to delete project: ' + (error.error.message || 'Unknown error'));
+      }
     });
   }
 

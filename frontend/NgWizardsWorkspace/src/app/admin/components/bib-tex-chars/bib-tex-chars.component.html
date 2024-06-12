@@ -1,26 +1,30 @@
 <div id="bibchars">
-    <mat-card class="mat-elevation-z4">
-
-        <mat-hint><strong>Hint</strong>: to process correctly, 3 backslashes are used instead of 1</mat-hint>
-        <div id="input-fields">
-            <mat-form-field appearance="fill">
-                <mat-label>Enter character</mat-label>
-                <input matInput [(ngModel)]="currentChar.char" name="char" placeholder="Character"/>
-            </mat-form-field>
-      
-            <mat-form-field appearance="fill">
-                <mat-label>Enter BibCode</mat-label>
-                <input matInput [(ngModel)]="currentChar.bibcode" name="bibcode" placeholder="BibCode"/>
-            </mat-form-field>
-        </div>
-
-        <div id="bibchar-buttons">
-            <button mat-raised-button *ngIf="editing" (click)="updateChar()">Edit</button>
-            <button mat-raised-button *ngIf="editing" (click)="clearForm()">Cancel</button>
-            <button mat-raised-button *ngIf="!editing" (click)="addChar()">Add</button>
-        </div>
-
-    </mat-card>
+    <form #bibcharForm="ngForm">
+        <mat-card class="mat-elevation-z4">
+            <mat-hint><strong>Hint</strong>: to process correctly, 3 backslashes are used instead of 1</mat-hint>
+            <div id="input-fields">
+                <mat-form-field appearance="fill">
+                    <mat-label>Enter character</mat-label>
+                    <input matInput [(ngModel)]="currentChar.char" name="char" placeholder="Character" required #character="ngModel"/>
+                    <mat-error *ngIf="character.errors?.['required']">
+                        Character is required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Enter BibCode</mat-label>
+                    <input matInput [(ngModel)]="currentChar.bibcode" name="bibcode" placeholder="BibCode" required #bibcode="ngModel"/>
+                    <mat-error *ngIf="bibcode.errors?.['required']">
+                        BibCode is required.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div id="bibchar-buttons">
+                <button mat-raised-button *ngIf="editing" (click)="updateChar()" [disabled]="!bibcharForm.valid">Edit</button>
+                <button mat-raised-button *ngIf="editing" (click)="clearForm()">Cancel</button>
+                <button mat-raised-button *ngIf="!editing" (click)="addChar()" [disabled]="!bibcharForm.valid">Add</button>
+            </div>
+        </mat-card>
+    </form>
 
     <mat-table class="bibchar-table mat-elevation-z4" [dataSource]="chars">
 

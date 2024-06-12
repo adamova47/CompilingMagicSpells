@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CncService {
-  private apiUrl = 'http://localhost:8000/cnc/'; // change from localhost to api
+  private apiUrl = 'http://api:8000/cnc/'; // change from localhost to api
 
   constructor(private http: HttpClient) { }
 

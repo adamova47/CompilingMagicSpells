@@ -14,6 +14,7 @@ import { AdminService } from '../../services/admin.service';
 import { ExportBibtexComponent } from '../export-bibtex/export-bibtex.component';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { TruncatePipe } from '../../services/truncate.pipe';
+import { NotificationService } from '../../services/notification.service';
 
 export function bibtexValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -75,7 +76,7 @@ export class PublicationsComponent implements OnInit {
   allUsers: any[] = [];
   allProjects: any[] = [];
   
-  constructor (private adminService: AdminService, private fb: FormBuilder) {
+  constructor (private adminService: AdminService, private fb: FormBuilder, private notify: NotificationService) {
     this.initBibtexForm();
     this.initPublicationForm();
   }
@@ -224,10 +225,12 @@ export class PublicationsComponent implements OnInit {
   addPublication(): void {
     this.adminService.addPublication(this.publicationForm.value).subscribe({
       next: (response) => {
-        console.log('Publication added successfully!', response);
+        this.notify.showSuccess('Publication added successfully!');
         this.loadPublications();
         this.clearForm();
-      }, error: (error) => {
+      }, 
+      error: (error) => {
+        this.notify.showError('Failed to add publication: ' + (error.error.message || 'Unknown error'));
         console.error('Error adding publication:', error);
       }
     });
@@ -236,10 +239,12 @@ export class PublicationsComponent implements OnInit {
   updatePublication(): void {
     this.adminService.updatePublication(this.publicationForm.get('id')!.value, this.publicationForm.value).subscribe({
       next: (response) => {
-        console.log('Publication updated successfully!', response);
+        this.notify.showSuccess('Publication updated successfully!');
         this.loadPublications();
         this.clearForm();
-      }, error: (error) => {
+      }, 
+      error: (error) => {
+        this.notify.showError('Failed to update publication: ' + (error.error.message || 'Unknown error'));
         console.error('Error updating publication:', error);
       }
     });
@@ -257,19 +262,39 @@ export class PublicationsComponent implements OnInit {
       next: (response) => {
         console.log('Publication updated successfully!', response);
         this.loadPublications();
+
+        if (this.publicationForm.get('id')?.value === publicationToChange.id) {
+          this.publicationForm.patchValue({
+            vis: publicationToChange.vis
+          });
+        }
       },
-      error: (error) => console.error('Error updating publication:', error)
+      error: (error) => {
+        this.notify.showError('Failed to toggle visibility: ' + (error.error.message || 'Unknown error'));
+        console.error('Error updating publication:', error);
+      }
     });
   }
 
   clearForm(): void {
     this.initPublicationForm();
+    this.initBibtexForm();
     this.editing = false;
   }
 
   deletePublication(id: number): void {
-    this.adminService.deletePublication(id).subscribe(() => {
-      this.loadPublications();
+    if (this.publicationForm.get('id')?.value === id) {
+      this.clearForm();
+    }
+    this.adminService.deletePublication(id).subscribe({
+      next: () => {
+        this.notify.showSuccess('Publication deleted successfully.');
+        this.loadPublications();
+      }, 
+      error: (error) => {
+        this.notify.showError('Failed to delete publication: ' + (error.error.message || 'Unknown error'));
+        console.error('Error deleting publication: ', error);
+      }
     });
   }
 
@@ -356,16 +381,18 @@ export class PublicationsComponent implements OnInit {
   }
 
   importBibtex() {
-    if (this.bibtexForm.valid) {
-      this.adminService.sendBibtexData(this.bibtexForm.value.bibtexContent).subscribe({
-        next: (response) => {
-          this.loadPublications();
-        },
-        error: (error) => {
-          this.bibtexForm.get('bibtexContent')?.setErrors({ 'backend': error.message });
-        }
-      });
-    }
+    this.adminService.sendBibtexData(this.bibtexForm.value.bibtexContent).subscribe({
+      next: (response) => {
+        this.notify.showSuccess('BibTeX data imported successfully!');
+        this.loadPublications();
+      },
+      error: (error) => {
+        const errorMessage = error.error.message || 'An unknown error occurred while importing BibTeX data.';
+
+        this.bibtexForm.get('bibtexContent')?.setErrors({ 'backend': errorMessage });
+        console.error('Error importing BibTeX data: ', errorMessage);
+      }
+    });
   }
 
   changeMode(): void {
