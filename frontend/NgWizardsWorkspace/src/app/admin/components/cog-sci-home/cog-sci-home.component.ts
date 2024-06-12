@@ -6,16 +6,18 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { AceEditorModule } from 'ngx-ace-editor-wrapper';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AdminService } from '../../services/admin.service';
 import { Subscription, filter } from 'rxjs';
 
 import { InsertDataComponent } from '../insert-data/insert-data.component';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-cog-sci-home',
   standalone: true,
-  imports: [MatCardModule, MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
+  imports: [MatSnackBarModule, MatCardModule, MatToolbarModule, MatButtonModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
   templateUrl: './cog-sci-home.component.html',
   styleUrl: './cog-sci-home.component.css'
 })
@@ -35,10 +37,14 @@ export class CogSciHomeComponent implements OnInit, OnDestroy{
 
   private routeSubscription!: Subscription;
 
+  isError: boolean = false;
+  errorMessage: string = '';
+
   constructor(
     private adminService: AdminService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -65,12 +71,18 @@ export class CogSciHomeComponent implements OnInit, OnDestroy{
         this.part = paraMap.get('part') || 'intro';
         this.adminService.getCogSciText(this.part).subscribe(data => {  
           this.text = data.text;
+        }, error => {
+          this.isError = true;
+          this.errorMessage = error.error.message;
         });
       });
     } else {
       this.part = 'intro';
       this.adminService.getCogSciText('intro').subscribe(data => {
         this.text = data.text;
+      }, error => {
+        this.isError = true;
+        this.errorMessage = error.error.message;
       });
     }
   }
@@ -81,8 +93,14 @@ export class CogSciHomeComponent implements OnInit, OnDestroy{
 
   updateContent(): void {
     this.adminService.updateCogSciText(this.part, this.text).subscribe({
-      next: (response) => console.log('Update successful:', response),
-      error: (error) => console.error('Error updating:', error)
+      next: (response) => {
+        const successMessage = "Data updated successfully.";
+        this.notify.showSuccess(successMessage);
+      },
+      error: (error) => {
+        const errorMessage = error.message;
+        this.notify.showSuccess(errorMessage);
+      }
     });
   }
 }

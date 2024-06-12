@@ -11,6 +11,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule, DateTimeAdapter } from '@da
 
 import { AdminService } from '../../services/admin.service';
 import { TruncatePipe } from '../../services/truncate.pipe';
+import { NotificationService } from '../../services/notification.service';
 
 interface Seminar {
   id: number | null;
@@ -40,7 +41,12 @@ export class AiSeminarComponent implements OnInit{
   
   @ViewChild(MatSort) sort: MatSort = new MatSort();
 
-  constructor(private adminService: AdminService, dateTimeAdapter: DateTimeAdapter<any>, private datePipe: DatePipe) {
+  constructor(
+    private adminService: AdminService, 
+    dateTimeAdapter: DateTimeAdapter<any>, 
+    private datePipe: DatePipe,
+    private notify: NotificationService
+  ){
     dateTimeAdapter.setLocale('en-UK')
   }
 
@@ -72,17 +78,31 @@ export class AiSeminarComponent implements OnInit{
 
   addSeminar(): void {
     this.formatDateTimeForBackend();
-    this.adminService.addAiseminar(this.currentSeminar).subscribe(() => {
-      this.loadSeminars();
-      this.clearForm();
+    this.adminService.addAiseminar(this.currentSeminar).subscribe({
+      next: () => {
+        this.notify.showSuccess('Seminar added successfully.');
+        this.loadSeminars();
+        this.clearForm();
+      },
+      error: (error) => {
+        this.notify.showError('Failed to add seminar: ' + (error.error.message || 'Unknown error'));
+        console.error('Error adding seminar', error);
+      }
     });
   }
 
   updateSeminar(): void {
     this.formatDateTimeForBackend();
-    this.adminService.updateAiseminar(this.currentSeminar.id!, this.currentSeminar).subscribe(() => {
-      this.loadSeminars();
-      this.clearForm();
+    this.adminService.updateAiseminar(this.currentSeminar.id!, this.currentSeminar).subscribe({
+      next: () => {
+        this.notify.showSuccess('Seminar updated successfully.');
+        this.loadSeminars();
+        this.clearForm();
+      },
+      error: (error) => {
+        this.notify.showError('Failed to update seminar: ' + (error.error.message || 'Unknown error'));
+        console.error('Error updating seminar', error);
+      }
     });
   }
 
@@ -110,8 +130,15 @@ export class AiSeminarComponent implements OnInit{
   }
 
   deleteSeminar(id: number): void {
-    this.adminService.deleteAiseminar(id).subscribe(() => {
-      this.loadSeminars();
+    this.adminService.deleteAiseminar(id).subscribe({
+      next: () => {
+        this.notify.showSuccess('Seminar deleted successfully.');
+        this.loadSeminars();
+      },
+      error: (error) => {
+        this.notify.showError('Failed to delete seminar: ' + (error.error.message || 'Unknown error'));
+        console.error('Error deleting seminar', error);
+      }
     });
   }
 

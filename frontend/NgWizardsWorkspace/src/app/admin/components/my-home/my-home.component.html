@@ -12,7 +12,7 @@
 </mat-toolbar>
 
 <section>
-    <mat-card>
+    <mat-card *ngIf="!isError; else errorContent">
         <mat-checkbox [(ngModel)]="data.leftpanel" name="left-panel"> Has left panel </mat-checkbox>
 
         <ace-editor #aceEditor
@@ -29,4 +29,10 @@
             <button mat-raised-button class="submit-button" (click)="updateMyHomeData()">Change Entry</button>
         </div>
     </mat-card>
+    
+    <ng-template #errorContent>
+        <mat-card>
+            <p>{{ errorMessage }}</p>
+        </mat-card>
+    </ng-template>
 </section>

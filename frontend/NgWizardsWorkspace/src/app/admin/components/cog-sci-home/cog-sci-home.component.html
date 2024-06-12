@@ -13,7 +13,7 @@
 </mat-toolbar>
 
 <section>
-    <mat-card>
+    <mat-card *ngIf="!isError; else errorContent">
         <ace-editor #aceEditor
         [(text)]="text"
         [mode]="'html'"
@@ -28,4 +28,10 @@
             <button class="submit-button" mat-button (click)="updateContent()">Change Entry</button>
         </div>
     </mat-card>
+
+    <ng-template #errorContent>
+        <mat-card>
+            <p>{{ errorMessage }}</p>
+        </mat-card>
+    </ng-template>
 </section>

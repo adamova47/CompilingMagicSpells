@@ -1,59 +1,88 @@
 <div id="aiseminar">
-    <mat-card class="mat-elevation-z4">
+    <form #seminarForm="ngForm">
+        <mat-card class="mat-elevation-z4">
 
-        <h3>{{ editing ? 'Edit seminar ' + currentSeminar.id : 'New seminar' }}</h3>
+            <h3>{{ editing ? 'Edit seminar ' + currentSeminar.id : 'New seminar' }}</h3>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Date </mat-label>
-            <input matInput [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" 
-                [(ngModel)]="currentSeminar.date" name="date">
-            <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label> Date </mat-label>
+                <input matInput [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" 
+                    [(ngModel)]="currentSeminar.date" name="date" required #date="ngModel">
+                <mat-error *ngIf="date.errors?.['required']">
+                    Date is required.
+                </mat-error>
+                <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Time </mat-label>
-            <input matInput [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2" 
-                [(ngModel)]="currentSeminar.time" name="time">
-            <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time>
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label> Time </mat-label>
+                <input matInput [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2" 
+                    [(ngModel)]="currentSeminar.time" name="time" required #time="ngModel">
+                <mat-error *ngIf="time.errors?.['required']">
+                    Time is required.
+                </mat-error>
+                <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Note </mat-label>
-            <input matInput [(ngModel)]="currentSeminar.note" name="note">
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label> Note </mat-label>
+                <input matInput [(ngModel)]="currentSeminar.note" name="note" #note="ngModel" maxlength="256">
+                <mat-error *ngIf="note.errors?.['maxlength']">
+                    Note cannot exceed 256 characters.
+                </mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Lecturer </mat-label>
-            <input matInput [(ngModel)]="currentSeminar.lecturer" name="lecturer">
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label> Lecturer </mat-label>
+                <input matInput [(ngModel)]="currentSeminar.lecturer" name="lecturer" required #lecturer="ngModel" maxlength="256">
+                <mat-error *ngIf="lecturer.errors?.['required']">
+                    Lecturer name is required.
+                </mat-error>
+                <mat-error *ngIf="lecturer.errors?.['maxlength']">
+                    Lecturer name cannot exceed 256 characters.
+                </mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Lecturer from </mat-label>
-            <input matInput [(ngModel)]="currentSeminar.lecturerfrom" name="lecturerfrom">
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label> Lecturer from </mat-label>
+                <input matInput [(ngModel)]="currentSeminar.lecturerfrom" name="lecturerfrom" #lecturerfrom="ngModel" maxlength="256">
+                <mat-error *ngIf="lecturerfrom.errors?.['maxlength'] && lecturerfrom.dirty">
+                    Lecturer from cannot exceed 256 characters.
+                </mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> URL </mat-label>
-            <input matInput [(ngModel)]="currentSeminar.url" name="url">
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label> URL </mat-label>
+                <input matInput [(ngModel)]="currentSeminar.url" name="url" #url="ngModel" maxlength="256">
+                <mat-error *ngIf="url.errors?.['maxlength']">
+                    URL name cannot exceed 256 characters.
+                </mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Title </mat-label>
-            <input matInput [(ngModel)]="currentSeminar.title" name="title">
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label> Title </mat-label>
+                <input matInput [(ngModel)]="currentSeminar.title" name="title" required #title="ngModel" maxlength="256">
+                <mat-error *ngIf="title.errors?.['required']">
+                    Title is required.
+                </mat-error>
+                <mat-error *ngIf="title.errors?.['maxlength']">
+                    Title cannot exceed 256 characters.
+                </mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label> Abstract </mat-label>
-            <textarea matInput [(ngModel)]="currentSeminar.abstract" name="abstract" rows="5"></textarea>
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label> Abstract </mat-label>
+                <textarea matInput [(ngModel)]="currentSeminar.abstract" name="abstract" rows="5"></textarea>
+            </mat-form-field>
 
-        <div id="aiseminar-buttons">
-            <button mat-raised-button *ngIf="editing" (click)="updateSeminar()"> Edit </button>
-            <button mat-raised-button *ngIf="editing" (click)="clearForm()"> Cancel </button>
-            <button mat-raised-button *ngIf="!editing" (click)="addSeminar()"> Add </button>
-        </div>
+            <div id="aiseminar-buttons">
+                <button mat-raised-button *ngIf="editing" (click)="updateSeminar()" [disabled]="!seminarForm.valid"> Edit </button>
+                <button mat-raised-button *ngIf="editing" (click)="clearForm()"> Cancel </button>
+                <button mat-raised-button *ngIf="!editing" (click)="addSeminar()" [disabled]="!seminarForm.valid"> Add </button>
+            </div>
 
-    </mat-card>
+        </mat-card>
+    </form>
 
     <mat-table class="bibchar-table mat-elevation-z4" [dataSource]="seminars" matSort>
 

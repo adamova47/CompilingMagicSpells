@@ -1,18 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription, filter } from 'rxjs';
-import { AceEditorComponent, AceEditorModule } from 'ngx-ace-editor-wrapper';
+import { AceEditorModule } from 'ngx-ace-editor-wrapper';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCard } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
 
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 
 import { AdminService } from '../../services/admin.service';
-import { FormsModule } from '@angular/forms';
+import { NotificationService } from '../../services/notification.service'; 
 
 import { InsertDataComponent } from '../insert-data/insert-data.component';
 
@@ -24,7 +26,7 @@ interface Data {
 @Component({
   selector: 'app-my-home',
   standalone: true,
-  imports: [MatCheckboxModule, MatInputModule, MatToolbarModule, MatButtonModule, MatCard, FormsModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
+  imports: [MatSnackBarModule, MatCheckboxModule, MatInputModule, MatToolbarModule, MatButtonModule, MatCard, FormsModule, RouterModule, CommonModule, AceEditorModule, InsertDataComponent],
   templateUrl: './my-home.component.html',
   styleUrl: './my-home.component.css'
 })
@@ -46,10 +48,14 @@ export class MyHomeComponent implements OnInit, OnDestroy {
     tabSize: 2,
   };
 
+  isError: boolean = false;
+  errorMessage: string = '';
+
   constructor(
     private adminService: AdminService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private notify: NotificationService
   ){}
 
   ngOnInit(): void {
@@ -69,6 +75,7 @@ export class MyHomeComponent implements OnInit, OnDestroy {
   }
 
   getData(): void {
+    this.isError = false;
     let childRoute = this.activatedRoute.firstChild?.firstChild;
     if (childRoute){
       this.routeSubscription?.unsubscribe();
@@ -77,6 +84,9 @@ export class MyHomeComponent implements OnInit, OnDestroy {
         this.adminService.getMyHomeData(this.username!, this.part).subscribe(data => {
           this.data.text = data.data.text;
           this.data.leftpanel = data.data.has_left;
+        }, error => {
+          this.isError = true;
+          this.errorMessage = error.error.message;
         });
       });
     } else {
@@ -84,15 +94,20 @@ export class MyHomeComponent implements OnInit, OnDestroy {
       this.adminService.getMyHomeData(this.username!, this.part).subscribe(data => {
         this.data.text = data.data.text;
         this.data.leftpanel = data.data.has_left;
+      }, error => {
+        this.isError = true;
+        this.errorMessage = error.error.message;
       });
     }
   }
 
   updateMyHomeData(): void {
     this.adminService.updateMyHomeData(this.username!, this.part, this.data).subscribe(response => {
-      console.log('Data updated successfully', response);
+      const successMessage = response.message;
+      this.notify.showSuccess(successMessage);
     }, error => {
-      console.error('Error updating data', error);
+      const errorMessage = error.message;
+      this.notify.showSuccess(errorMessage);
     });
   }
 

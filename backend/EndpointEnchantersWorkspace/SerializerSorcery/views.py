@@ -225,7 +225,7 @@ class AdminMyHomeData(APIView):
             if field in data:
                 setattr(obj, field, data[field])
         obj.save()
-        return Response({'message': 'Data fully updated successfully.'}, status=200)
+        return Response({'message': 'Data updated successfully.'}, status=200)
 
 
 class AdminGetInsertData(APIView):

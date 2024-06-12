@@ -20,18 +20,18 @@ export class ContentComponent implements OnInit, OnDestroy {
   // ! tells TypeScript that this property will definitely be initialized before use
   private routeSubscription: Subscription = new Subscription;
 
-  constructor (private activeRouter: ActivatedRoute) {}
+  constructor (private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    // check for 'firstChild' being not null before subscribing
-    if (this.activeRouter.firstChild) {
-      this.routeSubscription = this.activeRouter.firstChild?.params.subscribe(params => {
-        this.currentView = params['getname'] ? params['getname'] : 'home';
-      });
-    } else {
-      // handle the case where no child route is activated
-      this.currentView = 'home';
-    }
+    this.routeSubscription = this.activatedRoute.url.subscribe(() => {
+      this.updateView();
+    });
+  }
+
+  updateView(): void {
+    this.activatedRoute.firstChild?.params.subscribe(params => {
+      this.currentView = params['getname'] ? params['getname'] : 'home';
+    });
   }
 
   ngOnDestroy(): void {
