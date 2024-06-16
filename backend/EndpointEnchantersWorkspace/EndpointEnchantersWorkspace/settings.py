@@ -26,7 +26,7 @@ try:
         SECRET_KEY = f.read()
 except FileNotFoundError:
     print(
-        "\033[93m" + f"Unable to open {BASE_DIR / ".django_secret"}, SECRET_KEY will use an insecure value." + "\033[0m"
+        "\033[93m" + f"Unable to open {BASE_DIR / '.django_secret'}, SECRET_KEY will use an insecure value." + "\033[0m"
     )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -155,7 +155,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # for security in production specify which origins are allowed
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',  # allow your Angular app access
+    'http://localhost:8001',  # allow your Angular app access
+    'http://localhost:4200'
 ]
 
 '''
